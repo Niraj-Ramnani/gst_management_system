@@ -1,0 +1,38 @@
+# Environment variables
+.env
+.env.local
+
+# Backend
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/test_out.json
+backend/test_out.txt
+backend/test_extract_result.txt
+backend/ocr_diag_output.txt
+
+# Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Logs
+logs/
+*.log
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Misc
+.DS_Store
+Thumbs.db
+ocr_diag_output.txt
+test_ocr_debug.py
