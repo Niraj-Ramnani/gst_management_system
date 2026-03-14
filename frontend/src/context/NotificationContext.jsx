@@ -49,6 +49,12 @@ export const NotificationProvider = ({ children }) => {
                         changed = true;
                     }
                 } catch (err) {
+                    if (err.response?.status === 404) {
+                        // Invoice doesn't exist anymore, remove from polling
+                        updatedPending.splice(i, 1);
+                        i--;
+                        changed = true;
+                    }
                     console.error('Polling error:', err);
                 }
             }
