@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Zap, Shield, TrendingUp, FileText, ArrowRight, CheckCircle, BarChart3, Globe, Sparkles, Cpu, Layers, MousePointer2, Upload, Sun, Moon } from 'lucide-react'
+import { Zap, Shield, TrendingUp, FileText, ArrowRight, CheckCircle, BarChart3, Globe, Sparkles, Cpu, Layers, MousePointer2, Upload, Sun, Moon, Star, Menu } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
-import heroVideo from '../assets/JKLU_Video.mp4'
+import heroBg from '../assets/hero-bg.png'
 
 const features = [
   { icon: FileText, title: 'AI Invoice Extraction', desc: 'Enterprise-grade neural networks extract GST fields from raw data with 99.9% precision.', color: 'text-primary-400' },
@@ -43,122 +43,143 @@ export default function LandingPage() {
 
   return (
     <div
-      className="min-h-screen text-white selection:bg-primary-500/30 selection:text-white overflow-x-hidden transition-all duration-500"
+      className="min-h-screen selection:bg-cyan-500/30 selection:text-white overflow-x-hidden transition-all duration-500"
       style={{
-        backgroundColor: theme === 'light' ? '#f1f5f9' : '#020617',
-        color: theme === 'light' ? '#0f172a' : '#f1f5f9',
+        backgroundColor: theme === 'light' ? '#f8fbfc' : '#050a14',
+        color: theme === 'light' ? '#0a0f1e' : '#f1f5f9',
+        fontFamily: "'Inter', sans-serif"
       }}
     >
-      {/* Background Ornaments */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-900/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-900/10 blur-[120px] rounded-full" />
-        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-purple-900/05 blur-[100px] rounded-full" />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
-      </div>
-
       {/* Nav */}
       <motion.nav 
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="sticky top-0 z-50 px-6 py-5"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md transition-all duration-300 border-b"
+        style={{
+          backgroundColor: theme === 'light' ? 'rgba(255,255,255,0.9)' : 'rgba(10,15,30,0.85)',
+          borderColor: 'rgba(255,255,255,0.05)'
+        }}
       >
-        <div
-          className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 rounded-2xl backdrop-blur-xl shadow-2xl border transition-all duration-300"
-          style={{
-            backgroundColor: theme === 'light' ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.02)',
-            borderColor: theme === 'light' ? 'rgba(226,232,240,0.8)' : 'rgba(255,255,255,0.05)',
-          }}
-        >
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between px-10 py-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-glow-primary">
-              <Zap size={20} className="text-white" fill="white" />
+            <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center">
+              <Zap size={20} style={{ color: '#00b4f5' }} fill="#00b4f5" />
             </div>
-            <span className="font-display font-black text-xl tracking-tight" style={{ color: theme === 'light' ? '#0f172a' : '#f1f5f9' }}>GST<span className="text-primary-400">Smart</span></span>
+            <span className="font-display font-black text-[22px] tracking-tight" style={{ color: theme === 'light' ? '#0a0f1e' : '#ffffff' }}>
+              GST<span style={{ color: '#00b4f5' }}>Smart</span>
+            </span>
           </div>
-          <div className="hidden md:flex items-center gap-8 px-8">
-            <a href="#process" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary-500 transition-all">Process</a>
-            <a href="#features" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary-500 transition-all">Engine</a>
-            <a href="#compliance" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary-500 transition-all">Compliance</a>
+
+          <div className="hidden md:flex items-center gap-12">
+            {['PROCESS', 'ENGINE', 'COMPLIANCE'].map((link) => (
+              <a 
+                key={link}
+                href={`#${link.toLowerCase()}`} 
+                className="text-[11px] font-black uppercase tracking-[0.2em] transition-colors hover:text-[#00b4f5]"
+                style={{ color: '#94a3b8' }}
+              >
+                {link}
+              </a>
+            ))}
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center border transition-all duration-300 hover:scale-105 active:scale-95 shrink-0"
-              style={{
-                backgroundColor: theme === 'light' ? 'rgba(14,165,233,0.1)' : 'rgba(255,255,255,0.04)',
-                borderColor: theme === 'light' ? 'rgba(14,165,233,0.25)' : 'rgba(255,255,255,0.08)',
-              }}
-            >
-              {theme === 'dark'
-                ? <Moon size={15} className="text-slate-400" />
-                : <Sun size={15} className="text-amber-500" />
-              }
-            </button>
-            {/* Sign In — hidden on very small screens */}
-            <Link to="/login" className="hidden sm:inline text-sm font-bold text-slate-400 hover:text-primary-400 transition-colors">Sign In</Link>
-            <Link to="/register" className="btn-primary text-[10px] sm:text-xs font-bold uppercase tracking-widest px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl whitespace-nowrap">
-              <span className="sm:hidden">Join</span>
-              <span className="hidden sm:inline">Get Started</span>
+
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
+               <button onClick={toggleTheme} className="transition-transform hover:scale-110 active:scale-95">
+                 {theme === 'dark' ? <Moon size={20} className="text-slate-400" /> : <Sun size={20} className="text-amber-500" />}
+               </button>
+               <Link to="/login" className="hidden sm:block text-xs font-bold uppercase tracking-widest text-[#94a3b8] hover:text-[#00b4f5]">Sign In</Link>
+            </div>
+            <Link to="/register" className="hidden md:block bg-[#00b4f5] text-[#050a14] text-[11px] font-black uppercase tracking-[0.15em] px-8 py-3.5 rounded-lg hover:brightness-110 transition-all active:scale-95 shadow-[0_4px_20px_rgba(0,180,245,0.2)]">
+              Get Started
             </Link>
+            <button className="md:hidden text-slate-400">
+               <Menu size={24} />
+            </button>
           </div>
         </div>
       </motion.nav>
 
-      {/* Hero */}
-      <motion.section 
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-20 pb-16 sm:pb-28 text-center relative z-10"
+      {/* Hero Section */}
+      <section 
+        className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden"
+        style={{
+          backgroundImage: `url(${heroBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
       >
-        <motion.div variants={itemVariants} className="inline-flex items-center gap-2 bg-white/[0.03] border border-white/[0.05] text-primary-400 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] px-3 sm:px-5 py-2 rounded-full mb-6 sm:mb-8 backdrop-blur-md">
-          <Sparkles size={12} className="animate-pulse shrink-0" />
-          <span>The Future of Indian Business Compliance</span>
-        </motion.div>
-        
-        <motion.h1 variants={itemVariants} className="font-display font-black text-[2rem] sm:text-5xl md:text-7xl lg:text-8xl leading-tight sm:leading-[1.1] mb-6 sm:mb-8 tracking-tight sm:tracking-[-0.03em] break-words">
-          Automate GST.<br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-cyan-400 to-primary-500">Empower Growth.</span>
-        </motion.h1>
-        
-        <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed font-medium px-2">
-          Leverage high-performance AI extraction and predictive forecasting to eliminate compliance bottlenecks. Designed for scale, built for speed.
-        </motion.p>
-        
-        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-3 sm:gap-5 justify-center items-center mb-16 sm:mb-24 px-4">
-          <Link to="/register" className="btn-primary w-full sm:w-auto flex items-center justify-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-widest group shadow-[0_20px_50px_rgba(14,165,233,0.3)]">
-            Explore the Platform <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform shrink-0" />
-          </Link>
-          <Link to="/login" className="w-full sm:w-auto text-center border border-white/10 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-widest rounded-xl transition-all active:scale-95 text-slate-200 hover:border-white/20 hover:bg-white/5">
-             Watch Demo
-          </Link>
-        </motion.div>
+        {/* Overlay */}
+        <div 
+          className="absolute inset-0 z-0 transition-colors duration-500"
+          style={{
+            backgroundColor: theme === 'light' ? 'rgba(240,248,255,0.85)' : 'rgba(5,10,20,0.6)'
+          }}
+        />
 
-        {/* Hero Decorative Elements */}
-        <motion.div 
-          variants={itemVariants}
-          className="relative max-w-5xl mx-auto"
-        >
-          <div className="absolute inset-0 bg-primary-500/20 blur-[100px] -z-10 animate-pulse-slow rounded-full opacity-50" />
-          <div className="card-glass border border-white/10 rounded-[2rem] sm:rounded-[2.5rem] p-2 sm:p-4 shadow-2xl overflow-hidden aspect-video relative group bg-black/40">
-             <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent z-10 pointer-events-none" />
-             <video 
-               autoPlay 
-               loop 
-               muted 
-               playsInline 
-               className="w-full h-full object-cover rounded-[1.5rem] sm:rounded-[1.8rem] opacity-80 group-hover:opacity-100 transition-opacity duration-700"
-             >
-               <source src={heroVideo} type="video/mp4" />
-             </video>
-          </div>
-        </motion.div>
-      </motion.section>
+        <div className="relative z-10 max-w-5xl mx-auto px-5 pt-20">
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-8"
+            style={{
+              borderColor: 'rgba(0,180,245,0.3)',
+              backgroundColor: 'rgba(0,180,245,0.05)'
+            }}
+          >
+            <Star size={10} style={{ color: '#00b4f5' }} fill="#00b4f5" />
+            <span className="text-[10px] font-black uppercase tracking-[0.25em]" style={{ color: '#00b4f5' }}>
+              The Future of Indian Business Compliance
+            </span>
+          </motion.div>
+
+          <motion.h1 
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="font-display leading-[0.95] mb-8 tracking-[-0.03em]"
+            style={{ fontFamily: "'Syne', sans-serif", fontWeight: 900 }}
+          >
+            <span className="block text-[52px] md:text-[96px]" style={{ color: theme === 'light' ? '#0a0f1e' : '#ffffff' }}>
+              Automate GST
+            </span>
+            <span className="block text-[52px] md:text-[96px]" style={{ color: '#00b4f5' }}>
+              Empower Growth
+            </span>
+          </motion.h1>
+
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="text-base sm:text-[18px] max-w-[600px] mx-auto mb-12 leading-relaxed font-medium"
+            style={{ color: theme === 'light' ? '#475569' : '#94a3b8' }}
+          >
+            Leverage high-performance AI extraction and predictive forecasting to eliminate compliance bottlenecks. Designed for scale, built for speed.
+          </motion.p>
+
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          >
+            <Link 
+              to="/register" 
+              className="w-full sm:w-auto bg-[#00b4f5] text-[#050a14] font-bold px-8 py-3.5 rounded-full hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-cyan-900/40"
+            >
+              Start Free Trial
+            </Link>
+            <Link 
+              to="/login" 
+              className="w-full sm:w-auto border-[1.5px] border-[#00b4f5] text-[#00b4f5] font-bold px-8 py-3.5 rounded-full hover:bg-cyan-500/10 transition-all active:scale-95"
+            >
+              Watch Demo
+            </Link>
+          </motion.div>
+        </div>
+      </section>
 
       {/* Process Section */}
       <section id="process" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative z-10">
