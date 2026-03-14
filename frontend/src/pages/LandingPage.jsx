@@ -111,28 +111,28 @@ export default function LandingPage() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="max-w-7xl mx-auto px-6 pt-24 pb-32 text-center relative z-10"
+        className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-20 pb-16 sm:pb-28 text-center relative z-10"
       >
-        <motion.div variants={itemVariants} className="inline-flex items-center gap-3 bg-white/[0.03] border border-white/[0.05] text-primary-400 text-[10px] font-black uppercase tracking-[0.2em] px-5 py-2 rounded-full mb-8 backdrop-blur-md">
-          <Sparkles size={14} className="animate-pulse" />
-          The Future of Indian Business Compliance
+        <motion.div variants={itemVariants} className="inline-flex items-center gap-2 bg-white/[0.03] border border-white/[0.05] text-primary-400 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] px-3 sm:px-5 py-2 rounded-full mb-6 sm:mb-8 backdrop-blur-md">
+          <Sparkles size={12} className="animate-pulse shrink-0" />
+          <span>The Future of Indian Business Compliance</span>
         </motion.div>
         
-        <motion.h1 variants={itemVariants} className="font-display font-black text-6xl md:text-8xl text-white leading-[1.1] mb-8 tracking-[-0.03em]">
+        <motion.h1 variants={itemVariants} className="font-display font-black text-4xl sm:text-6xl md:text-8xl leading-[1.1] mb-6 sm:mb-8 tracking-[-0.03em]">
           Automate GST.<br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-cyan-400 to-primary-500 animate-gradient">Empower Growth.</span>
         </motion.h1>
         
-        <motion.p variants={itemVariants} className="text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed font-medium">
+        <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed font-medium px-2">
           Leverage high-performance AI extraction and predictive forecasting to eliminate compliance bottlenecks. Designed for scale, built for speed.
         </motion.p>
         
-        <motion.div variants={itemVariants} className="flex gap-5 justify-center flex-wrap mb-24">
-          <Link to="/register" className="btn-primary flex items-center gap-3 px-8 py-4 text-sm font-bold uppercase tracking-widest group shadow-[0_20px_50px_rgba(14,165,233,0.3)]">
-            Explore the Platform <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-3 sm:gap-5 justify-center items-center mb-16 sm:mb-24 px-4">
+          <Link to="/register" className="btn-primary w-full sm:w-auto flex items-center justify-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-widest group shadow-[0_20px_50px_rgba(14,165,233,0.3)]">
+            Explore the Platform <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform shrink-0" />
           </Link>
-          <Link to="/login" className="bg-white/05 hover:bg-white/10 border border-white/10 px-8 py-4 text-sm font-bold uppercase tracking-widest rounded-xl transition-all active:scale-95 text-slate-200">
-             Watch Production Demo
+          <Link to="/login" className="w-full sm:w-auto text-center border border-white/10 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-widest rounded-xl transition-all active:scale-95 text-slate-200 hover:border-white/20 hover:bg-white/5">
+             Watch Demo
           </Link>
         </motion.div>
 
@@ -161,13 +161,13 @@ export default function LandingPage() {
       </motion.section>
 
       {/* Process Section */}
-      <section id="process" className="max-w-7xl mx-auto px-6 py-32 relative z-10">
-        <div className="text-center mb-24">
+      <section id="process" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative z-10">
+        <div className="text-center mb-12 sm:mb-20">
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary-500 mb-4 block">The Workflow</span>
-          <h2 className="font-display font-black text-4xl md:text-5xl text-white tracking-tight">How GSTSmart Operates.</h2>
+          <h2 className="font-display font-black text-3xl sm:text-4xl md:text-5xl tracking-tight">How GSTSmart Operates.</h2>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 relative">
            {/* Connecting Line */}
            <div className="hidden md:block absolute top-1/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent z-0" />
            
@@ -199,13 +199,13 @@ export default function LandingPage() {
 
       {/* Features */}
       <section id="features" className="bg-white/[0.02] border-y border-white/[0.05] relative z-10 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 py-32">
-          <div className="text-center mb-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+          <div className="text-center mb-10 sm:mb-16">
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary-500 mb-4 block">Core Engine</span>
-            <h2 className="font-display font-black text-4xl text-white mb-4 tracking-tight">Enterprise Infrastructure.</h2>
-            <p className="text-slate-500 font-medium">Powering the next generation of digital-first Indian companies.</p>
+            <h2 className="font-display font-black text-3xl sm:text-4xl mb-3 sm:mb-4 tracking-tight">Enterprise Infrastructure.</h2>
+            <p className="text-slate-500 font-medium text-sm sm:text-base">Powering the next generation of digital-first Indian companies.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-8">
             {features.map(({ icon: Icon, title, desc, color }) => (
               <motion.div 
                 key={title} 
@@ -227,15 +227,15 @@ export default function LandingPage() {
       </section>
 
       {/* Trust Checklist */}
-      <section id="compliance" className="max-w-5xl mx-auto px-6 py-32 text-center relative z-10">
+      <section id="compliance" className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center relative z-10">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1 }}
-          className="card-glass p-16 border border-white/10 rounded-[3rem] shadow-card relative overflow-hidden group"
+          className="card-glass p-7 sm:p-12 md:p-16 border border-white/10 rounded-[2rem] sm:rounded-[3rem] shadow-card relative overflow-hidden group"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 blur-3xl -mr-32 -mt-32 rounded-full" />
-          <h2 className="font-display font-black text-3xl text-white mb-12 tracking-tight">Standard Operating Procedures</h2>
+          <h2 className="font-display font-black text-2xl sm:text-3xl mb-8 sm:mb-12 tracking-tight">Standard Operating Procedures</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
             {[
               'Universal Invoice Data Extraction',
@@ -258,24 +258,24 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="max-w-7xl mx-auto px-6 py-32 relative z-10">
-         <div className="card-glass bg-gradient-to-br from-primary-900/20 to-transparent p-12 md:p-24 border border-white/10 rounded-[4rem] text-center relative overflow-hidden">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative z-10">
+         <div className="card-glass bg-gradient-to-br from-primary-900/20 to-transparent p-8 sm:p-16 md:p-24 border border-white/10 rounded-[2.5rem] sm:rounded-[4rem] text-center relative overflow-hidden">
             <motion.div 
                variants={pulseVariants}
                initial="initial"
                animate="animate"
                className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-600/10 blur-[150px] -z-10 rounded-full" 
             />
-            <h2 className="font-display font-black text-5xl md:text-7xl text-white mb-8 tracking-tighter">Ready to Scale?</h2>
-            <p className="text-slate-400 text-lg mb-12 max-w-xl mx-auto font-medium">Join 500+ enterprises automating their GST compliance with military precision.</p>
-            <Link to="/register" className="btn-primary inline-flex items-center gap-3 px-12 py-5 text-sm font-bold uppercase tracking-widest group">
-               Create Business Account <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            <h2 className="font-display font-black text-4xl sm:text-5xl md:text-7xl mb-6 sm:mb-8 tracking-tighter">Ready to Scale?</h2>
+            <p className="text-slate-400 text-base sm:text-lg mb-8 sm:mb-12 max-w-xl mx-auto font-medium">Join 500+ enterprises automating their GST compliance with military precision.</p>
+            <Link to="/register" className="btn-primary inline-flex items-center gap-3 px-8 sm:px-12 py-4 sm:py-5 text-xs sm:text-sm font-bold uppercase tracking-widest group">
+               Create Business Account <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform shrink-0" />
             </Link>
          </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.05] bg-black/20 relative z-10 px-6 py-20 text-center">
+      <footer className="border-t border-white/[0.05] bg-black/20 relative z-10 px-4 sm:px-6 py-12 sm:py-20 text-center">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-8">
            <div className="flex items-center gap-3 opacity-50 grayscale hover:grayscale-0 transition-all cursor-default">
               <Zap size={24} className="text-primary-500" fill="currentColor" />
