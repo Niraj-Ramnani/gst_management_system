@@ -19,10 +19,11 @@ from backend.app.models.returns import MonthlyReturn
 from backend.app.core.security import get_password_hash
 from dotenv import load_dotenv
 
-load_dotenv(os.path.join(os.path.dirname(__file__), "../backend/.env"))
+load_dotenv(os.path.join(os.path.dirname(__file__), "../.env"))
 
 MONGO_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
 DB_NAME = os.getenv("DATABASE_NAME", "gst_management")
+os.environ.setdefault("MAX_FILE_SIZE_MB", "10")
 
 SUPPLIERS = [
     ("Tata Consultancy Services Ltd", "27AABCT3518Q1ZS"),
@@ -163,4 +164,11 @@ async def seed():
 
 
 if __name__ == "__main__":
-    asyncio.run(seed())
+    try:
+        asyncio.run(seed())
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        if "ValidationError" in str(type(e)):
+            print("\nDetailed Pydantic Error:")
+            print(e)
