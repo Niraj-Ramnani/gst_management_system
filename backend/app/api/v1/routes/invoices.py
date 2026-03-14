@@ -151,14 +151,18 @@ async def review_invoice(
 @router.post("/{invoice_id}/reparse", response_model=InvoiceResponse)
 async def reparse_invoice(
     invoice_id: str,
-    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
 ):
     invoice = await Invoice.get(invoice_id)
     if not invoice or invoice.user_id != str(current_user.id):
         raise HTTPException(status_code=404, detail="Invoice not found")
-    background_tasks.add_task(process_invoice_pipeline, invoice_id)
-    return _to_response(invoice)
+        
+    # Run synchronously so frontend waits for LLM to finish
+    await process_invoice_pipeline(invoice_id)
+    
+    # Refetch the newly parsed invoice to return the updated data
+    updated_invoice = await Invoice.get(invoice_id)
+    return _to_response(updated_invoice)
 
 
 
@@ -176,6 +180,7 @@ def _to_response(inv: Invoice) -> InvoiceResponse:
         supplier_gstin=inv.supplier_gstin,
         buyer_name=inv.buyer_name,
         buyer_gstin=inv.buyer_gstin,
+        hsn_sac_code=inv.hsn_sac_code,
         taxable_amount=inv.taxable_amount,
         cgst=inv.cgst,
         sgst=inv.sgst,

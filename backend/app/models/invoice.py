@@ -70,3 +70,9 @@ class Invoice(Document):
 
     class Settings:
         name = "invoices"
+        indexes = [
+            "user_id",
+            "business_id",
+            "invoice_date",
+            "status",
+        ]

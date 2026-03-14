@@ -1,179 +1,150 @@
 """
 Invoice Parser - Hybrid Text + OCR extraction pipeline.
 
-Priority for PDFs:
-  1. pypdf   (pure Python, works for digital PDFs)
-  2. pdf2image + OCR (for scanned/image PDFs)
-
-Priority for images:
-  1. EasyOCR (cached reader, GPU off)
-  2. pytesseract (if tesseract binary is installed)
+Priority for PDFs & Images:
+  1. Try pdfplumber (text PDF)
+  2. If no text -> RapidOCR (ONNX-based, no PaddlePaddle needed)
+  3. Parser
 """
 import os
 import re
+import asyncio
 from typing import Dict, Any, Tuple, Optional
 
-# ── Global cached EasyOCR reader (loaded once) ───────────────────────────────
-_easyocr_reader = None
+# ── Global cached RapidOCR reader (loaded once) ──────────────────────────────
+_rapid_ocr = None
 
-def _get_easyocr_reader():
-    global _easyocr_reader
-    if _easyocr_reader is None:
+def _get_rapid_ocr():
+    global _rapid_ocr
+    if _rapid_ocr is None:
         try:
-            import easyocr
-            print("[OCR] Loading EasyOCR model (first time, please wait)...")
-            _easyocr_reader = easyocr.Reader(["en"], gpu=False, verbose=False)
-            print("[OCR] EasyOCR model loaded.")
+            from rapidocr_onnxruntime import RapidOCR
+            print("[OCR] Loading RapidOCR engine (first time, please wait)...")
+            _rapid_ocr = RapidOCR()
+            print("[OCR] RapidOCR engine loaded.")
         except Exception as e:
-            print(f"[OCR] EasyOCR load failed: {e}")
-    return _easyocr_reader
+            print(f"[OCR] RapidOCR load failed: {e}")
+    return _rapid_ocr
 
 
-def _preprocess_image(image):
-    """Improve image quality for better OCR accuracy."""
+def _ocr_with_rapid(image_path: str) -> str:
+    """Run RapidOCR on an image path. Returns joined text."""
     try:
-        from PIL import Image, ImageFilter, ImageEnhance
-        # Convert to RGB if needed
-        if image.mode not in ("RGB", "L"):
-            image = image.convert("RGB")
-        # Upscale small images (OCR works best at 300dpi+)
-        w, h = image.size
-        if w < 1200 or h < 1200:
-            scale = max(1200 / w, 1200 / h)
-            image = image.resize((int(w * scale), int(h * scale)), Image.LANCZOS)
-        # Sharpen + contrast boost
-        image = ImageEnhance.Contrast(image).enhance(1.5)
-        image = ImageEnhance.Sharpness(image).enhance(2.0)
-        return image
-    except Exception as e:
-        print(f"[OCR] Image preprocessing failed (using original): {e}")
-        return image
-
-
-def _ocr_with_easyocr(image) -> str:
-    """Run EasyOCR on a PIL image. Returns joined text."""
-    try:
-        import numpy as np
-        reader = _get_easyocr_reader()
-        if reader is None:
+        ocr = _get_rapid_ocr()
+        if ocr is None:
             return ""
-        # Convert PIL image to numpy array for EasyOCR
-        img_arr = np.array(image)
-        results = reader.readtext(
-            img_arr,
-            detail=1,
-            paragraph=True,
-        )
-        # Sort by vertical position (top to bottom)
-        results_sorted = sorted(results, key=lambda r: float(r[0][0][1]))
-        lines = [str(item[1]) for item in results_sorted]
+            
+        result, elapse = ocr(image_path)
+        if not result:
+            return ""
+            
+        # result is a list of [box, text, score]
+        # Group logic: sort by Y center, then cluster into lines, then sort by X
+        boxes = []
+        for item in result:
+            if not item:
+                continue
+            box, text, score = item
+            # box is [[x1, y1], [x2, y1], [x2, y2], [x1, y2]]
+            y_center = (box[0][1] + box[2][1]) / 2.0
+            x_center = (box[0][0] + box[1][0]) / 2.0
+            boxes.append({'text': text, 'y': y_center, 'x': x_center})
+            
+        boxes.sort(key=lambda b: b['y'])
+        
+        lines = []
+        current_line = []
+        current_y = None
+        # Max Y difference to be considered the same line
+        line_tolerance = 15.0 
+
+        for b in boxes:
+            if current_y is None:
+                current_y = b['y']
+                current_line.append(b)
+            elif abs(b['y'] - current_y) <= line_tolerance:
+                current_line.append(b)
+            else:
+                current_line.sort(key=lambda x: x['x'])
+                lines.append(u" ".join([str(x['text']) for x in current_line if x.get('text')]))
+                current_y = b['y']
+                current_line = [b]
+                
+        if current_line:
+            current_line.sort(key=lambda x: x['x'])
+            lines.append(u" ".join([str(x['text']) for x in current_line if x.get('text')]))
+            
         return "\n".join(lines)
     except Exception as e:
-        print(f"[OCR] EasyOCR inference failed: {e}")
+        print(f"[OCR] RapidOCR inference failed: {e}")
         return ""
 
 
-def _ocr_with_tesseract(image) -> str:
-    """Fallback to pytesseract if tesseract binary is installed."""
-    try:
-        import pytesseract
-        # Common Tesseract installation paths on Windows
-        tesseract_paths = [
-            r"C:\Program Files\Tesseract-OCR\tesseract.exe",
-            r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
-            r"C:\Users\HP\AppData\Local\Tesseract-OCR\tesseract.exe",
-        ]
-        for path in tesseract_paths:
-            if os.path.exists(path):
-                pytesseract.pytesseract.tesseract_cmd = path
-                break
-        cfg = "--psm 6 --oem 1"
-        return pytesseract.image_to_string(image, config=cfg)
-    except Exception as e:
-        print(f"[OCR] pytesseract failed: {e}")
-        return ""
-
-
-def _run_ocr(image) -> Tuple[str, str]:
-    """Try both OCR engines on a preprocessed image."""
-    from PIL import Image as PILImage
-    # Ensure it's a PIL image
-    if not hasattr(image, 'size'):
-        try:
-            image = PILImage.fromarray(image)
-        except Exception:
-            pass
-
-    preprocessed = _preprocess_image(image)
-
-    text = _ocr_with_easyocr(preprocessed)
-    if text.strip():
-        print(f"[OCR] EasyOCR succeeded: {len(text)} chars")
-        return text, "easyocr"
-
-    text = _ocr_with_tesseract(preprocessed)
-    if text.strip():
-        print(f"[OCR] pytesseract succeeded: {len(text)} chars")
-        return text, "pytesseract"
-
-    print("[OCR] All OCR methods returned empty text.")
-    return "", "none"
-
-
-async def _extract_text_from_pdf(file_path: str) -> Tuple[str, str]:
-    """Step 1: pypdf for digital PDFs. Step 2: OCR for scanned PDFs."""
-    # pypdf for text-layer PDFs
+def _extract_text_from_pdf_sync(file_path: str) -> Tuple[str, str]:
+    """Step 1: pdfplumber. Step 2: RapidOCR."""
     text = ""
     try:
-        from pypdf import PdfReader
-        reader = PdfReader(file_path)
-        for page in reader.pages:
-            page_text = page.extract_text() or ""
-            if page_text.strip():
-                text = text + page_text + "\n"
+        import pdfplumber
+        with pdfplumber.open(file_path) as pdf:
+            for page in pdf.pages:
+                page_text = page.extract_text() or ""
+                if page_text.strip():
+                    text = text + page_text + "\n"
+                    
         if text.strip() and len(text.strip()) >= 50:
-            print(f"[PDF] pypdf: {len(text)} chars extracted.")
-            return text, "pypdf"
+            print(f"[PDF] pdfplumber: {len(text)} chars extracted.")
+            return text, "pdfplumber"
         else:
-            print(f"[PDF] pypdf: only {len(text)} chars — falling back to OCR.")
+            print(f"[PDF] pdfplumber: only {len(text)} chars — falling back to OCR.")
     except Exception as e:
-        print(f"[PDF] pypdf error: {e}")
+        print(f"[PDF] pdfplumber error: {e}")
 
     # OCR fallback for scanned/image PDFs
     try:
         from pdf2image import convert_from_path
-        print("[PDF] Converting PDF to images for OCR...")
+        import tempfile
+        print("[PDF] Converting PDF to images for RapidOCR...")
+        # Convert first 2 pages max to keep it fast
         images = convert_from_path(file_path, dpi=250, first_page=1, last_page=2)
         combined = ""
         for img in images:
-            t, _ = _run_ocr(img)
-            combined = combined + t + "\n"
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp:
+                img.save(tmp.name, format="PNG")
+                tmp_path = tmp.name
+            
+            try:
+                t = _ocr_with_rapid(tmp_path)
+                combined = combined + t + "\n"
+            finally:
+                if os.path.exists(tmp_path):
+                    os.unlink(tmp_path)
+                    
         if combined.strip():
-            print(f"[PDF] PDF OCR: {len(combined)} chars extracted.")
-            return combined, "pdf_ocr"
+            print(f"[PDF] RapidOCR: {len(combined)} chars extracted.")
+            return combined, "rapidocr"
     except Exception as e:
-        print(f"[PDF] pdf2image OCR error: {e}")
+        print(f"[PDF] pdf2image/RapidOCR error: {e}")
 
     return "", "none"
 
 
-async def _extract_text_from_image(file_path: str) -> Tuple[str, str]:
-    """OCR directly on image files (jpg, png, etc.)"""
+def _extract_text_from_image_sync(file_path: str) -> Tuple[str, str]:
+    """RapidOCR directly on image files."""
     try:
-        from PIL import Image
-        img = Image.open(file_path)
-        print(f"[IMG] Loaded image: {img.size} {img.mode}")
-        text, method = _run_ocr(img)
-        return text, f"image_{method}"
+        print(f"[IMG] Running RapidOCR on image...")
+        text = _ocr_with_rapid(file_path)
+        if text.strip():
+            return text, "rapidocr"
     except Exception as e:
         print(f"[IMG] Image OCR error: {e}")
-        return "", "error"
+        
+    return "", "none"
 
 
-def _extract_fields_from_text(text: str) -> Dict[str, Any]:
-    """Rule-based field extraction."""
-    from app.ml.invoice_parser.extractor import extract_fields_from_text as ext
-    return ext(text)
+async def _extract_fields_from_text_async(text: str) -> Dict[str, Any]:
+    """LLM-based field extraction."""
+    from app.ml.invoice_parser.extractor import extract_fields_from_text_async as ext
+    return await ext(text)
 
 
 async def parse_invoice(file_path: str) -> Dict[str, Any]:
@@ -185,9 +156,9 @@ async def parse_invoice(file_path: str) -> Dict[str, Any]:
 
     try:
         if ext_type == "pdf":
-            raw_text, extraction_method = await _extract_text_from_pdf(file_path)
+            raw_text, extraction_method = await asyncio.to_thread(_extract_text_from_pdf_sync, file_path)
         else:
-            raw_text, extraction_method = await _extract_text_from_image(file_path)
+            raw_text, extraction_method = await asyncio.to_thread(_extract_text_from_image_sync, file_path)
     except Exception as e:
         print(f"[PARSE] Extraction top-level error: {e}")
 
@@ -200,6 +171,6 @@ async def parse_invoice(file_path: str) -> Dict[str, Any]:
         print(">>> NO TEXT EXTRACTED — fields will all be null <<<")
     print("=" * 60)
 
-    result = _extract_fields_from_text(raw_text)
+    result = await _extract_fields_from_text_async(raw_text)
     result["extraction_method"] = extraction_method
     return result

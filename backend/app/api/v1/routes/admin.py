@@ -31,5 +31,5 @@ async def admin_stats(current_user: User = Depends(get_current_admin)):
         "total_users": await User.count(),
         "total_businesses": await BusinessProfile.count(),
         "total_invoices": await Invoice.count(),
-        "flagged_invoices": await Invoice.find(Invoice.is_fraudulent == True).count(),
+        "flagged_invoices": 0,
     }

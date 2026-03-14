@@ -16,6 +16,7 @@ class InvoiceResponse(BaseModel):
     supplier_gstin: Optional[str]
     buyer_name: Optional[str]
     buyer_gstin: Optional[str]
+    hsn_sac_code: Optional[str] = None
     taxable_amount: Optional[float]
     cgst: Optional[float]
     sgst: Optional[float]

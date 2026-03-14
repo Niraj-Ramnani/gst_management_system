@@ -1,18 +1,27 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import Sidebar from './Sidebar'
 import TopNav from './TopNav'
 
 export default function AppLayout() {
   const location = useLocation()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+  // Close sidebar when route changes on mobile
+  useEffect(() => {
+    setIsSidebarOpen(false)
+  }, [location.pathname])
 
   return (
-    <div className="flex h-screen overflow-hidden bg-surface-950">
-      <Sidebar />
+    <div className="flex h-screen overflow-hidden bg-slate-950">
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      
       <div className="flex flex-col flex-1 overflow-hidden relative">
-        <TopNav />
-        <main className="flex-1 overflow-y-auto p-6 scroll-smooth">
-          <div className="max-w-7xl mx-auto pb-12">
+        <TopNav onMenuClick={() => setIsSidebarOpen(true)} />
+        
+        <main className="flex-1 overflow-y-auto scroll-smooth">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 pb-20">
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}

@@ -16,7 +16,8 @@
 | 📈 **Forecasting** | Prophet/ARIMA-based next-month GST liability prediction |
 | 📋 **Return Generation** | One-click GSTR-style monthly summary |
 | 🔐 **JWT Auth** | Role-based access: Admin, Accountant, Business Owner |
-| 📱 **Modern Dashboard** | KPIs, charts, real-time alerts, responsive UI |
+| 💎 **Premium UI/UX** | Next-gen dark mode with glassmorphism, micro-animations, and 60 FPS transitions |
+| 📱 **Mobile Optimized** | Fully responsive design with sliding sidebar drawer for field use |
 
 ---
 
@@ -109,11 +110,11 @@ docker-compose up --build
 ```
 gst-management-system/
 ├── frontend/                 # React + Vite SPA
-│   └── src/
+│   └── PI clients
+│       ├── context/          # Auth contextsrc/
 │       ├── pages/            # Route pages
 │       ├── components/       # Reusable UI components
-│       ├── services/         # Axios API clients
-│       ├── context/          # Auth context
+│       ├── services/         # Axios A
 │       └── utils/            # Formatters, helpers
 ├── backend/
 │   ├── main.py               # FastAPI app entry
@@ -184,7 +185,7 @@ Prophet time-series on monthly returns → confidence interval
 2. **Full-Stack AI Integration** — Not just a demo; real ML models (Isolation Forest, Prophet) are actually running.
 3. **Production Architecture** — Service layers, JWT auth, RBAC, async background tasks, Docker-ready.
 4. **Graceful Fallbacks** — Every AI model has a fallback, so it demos reliably on any hardware.
-5. **Rich UI** — Dark-theme dashboard with real charts, KPIs, status tracking, and fraud visualization.
+5. **Next-Gen Premium UI** — A high-end dark-theme dashboard with glassmorphism, fluid micro-animations, real-time charts, and a fully mobile-first responsive engine.
 6. **End-to-End Workflow** — Upload → Parse → Review → Fraud Check → Return → Forecast. Full lifecycle.
 7. **Seed Data Ready** — One script gives judges 6 months of realistic invoices to explore.
 8. **Extensible** — Clean service layer; swap OCR model, add cloud storage, or plug in Donut transformer later.

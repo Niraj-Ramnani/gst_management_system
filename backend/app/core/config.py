@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
 from typing import List
-
+import os
 
 class Settings(BaseSettings):
     # App
@@ -8,28 +8,28 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     # Database
-    MONGODB_URL: str = "mmongodb+srv://hariom:hariom007@cluster0.qtcwg.mongodb.net/gst_management"
-    DATABASE_NAME: str = "gst_management"
+    MONGODB_URL: str
+    DATABASE_NAME: str
 
     # JWT
-    SECRET_KEY: str = "your-super-secret-key-change-in-production-min-32-chars"
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
 
     # CORS
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:5173", "http://localhost:3000"]
+    ALLOWED_ORIGINS: List[str]
 
     # File Storage
-    UPLOAD_DIR: str = "uploads"
-    MAX_FILE_SIZE_MB: int = 10
+    UPLOAD_DIR: str
+    MAX_FILE_SIZE_MB: int
     ALLOWED_EXTENSIONS: List[str] = ["pdf", "jpg", "jpeg", "png"]
 
     # ML
+    GROQ_API_KEY: str = ""
     FRAUD_THRESHOLD: float = 0.6
     MODEL_DIR: str = "app/ml/models"
 
     class Config:
         env_file = ".env"
-
 
 settings = Settings()

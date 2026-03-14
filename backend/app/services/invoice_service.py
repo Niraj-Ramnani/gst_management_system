@@ -17,6 +17,22 @@ async def process_invoice_pipeline(invoice_id: str):
 
         # Step 1: Parse
         parsed = await parse_invoice(invoice.file_path)
+        has_extracted_fields = any(
+            parsed.get(field) is not None
+            for field in (
+                "invoice_number",
+                "invoice_date",
+                "supplier_name",
+                "supplier_gstin",
+                "buyer_name",
+                "buyer_gstin",
+                "taxable_amount",
+                "cgst",
+                "sgst",
+                "igst",
+                "total_amount",
+            )
+        )
         update = {
             "invoice_number": parsed.get("invoice_number"),
             "invoice_date": parsed.get("invoice_date"),
@@ -32,7 +48,7 @@ async def process_invoice_pipeline(invoice_id: str):
             "hsn_sac_code": parsed.get("hsn_sac_code"),
             "parser_confidence": parsed.get("confidence", 0.75),
             "parsed_data": parsed,
-            "status": InvoiceStatus.parsed,
+            "status": InvoiceStatus.parsed if has_extracted_fields else InvoiceStatus.uploaded,
             "updated_at": datetime.utcnow(),
         }
         await invoice.update({"$set": update})
