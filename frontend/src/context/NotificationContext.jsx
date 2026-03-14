@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { invoiceService } from '../services/api';
+import { useAuth } from './AuthContext';
 
 const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
+    const { token } = useAuth();
     const [notifications, setNotifications] = useState(() => {
         const saved = localStorage.getItem('notifications');
         return saved ? JSON.parse(saved) : [];
@@ -23,7 +25,7 @@ export const NotificationProvider = ({ children }) => {
 
     // Polling for pending uploads
     useEffect(() => {
-        if (pendingUploads.length === 0) return;
+        if (!token || pendingUploads.length === 0) return;
 
         const poll = async () => {
             const updatedPending = [...pendingUploads];
@@ -58,7 +60,7 @@ export const NotificationProvider = ({ children }) => {
 
         const interval = setInterval(poll, 5000);
         return () => clearInterval(interval);
-    }, [pendingUploads]);
+    }, [pendingUploads, token]);
 
     const addNotification = (notification) => {
         const newNotification = {

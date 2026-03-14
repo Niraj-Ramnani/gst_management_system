@@ -34,8 +34,8 @@ function PublicRoute({ children }) {
 
 export default function App() {
   return (
-    <NotificationProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <NotificationProvider>
         <BrowserRouter>
           <Toaster
             position="top-right"
@@ -63,7 +63,7 @@ export default function App() {
             </Routes>
           </Suspense>
         </BrowserRouter>
-      </AuthProvider>
-    </NotificationProvider>
+      </NotificationProvider>
+    </AuthProvider>
   )
 }
