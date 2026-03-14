@@ -39,7 +39,7 @@ export default function DashboardPage() {
   const [invoiceSummary, setInvoiceSummary] = useState(null)
   const [taxSummary, setTaxSummary] = useState(null)
   const [recentInvoices, setRecentInvoices] = useState([])
-  const [chartData, setChartData] = useState([])
+  const [profileMissing, setProfileMissing] = useState(false)
 
   useEffect(() => {
     loadDashboard()
@@ -63,7 +63,10 @@ export default function DashboardPage() {
           'Purchase Tax': m.total_purchase_tax,
           'Net Payable': m.net_gst_payable,
         })))
+      } else if (taxRes.reason?.response?.status === 400) {
+        setProfileMissing(true)
       }
+      
       if (recentRes.status === 'fulfilled') setRecentInvoices(recentRes.value.data.invoices || [])
     } finally {
       setLoading(false)
@@ -94,13 +97,39 @@ export default function DashboardPage() {
       animate="visible"
       className="space-y-6"
     >
+      {/* Onboarding Banner */}
+      {profileMissing && (
+        <motion.div 
+          variants={itemVariants}
+          className="bg-gradient-to-r from-primary-600 to-indigo-600 rounded-2xl p-6 sm:p-8 shadow-xl shadow-primary-900/20 relative overflow-hidden flex flex-col sm:flex-row items-center gap-6"
+        >
+          <div className="absolute right-0 top-0 w-64 h-64 bg-white/10 blur-3xl -mr-20 -mt-20 opacity-50" />
+          <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center border border-white/30 shrink-0">
+             <Shield size={28} className="text-white" />
+          </div>
+          <div className="flex-1 text-center sm:text-left space-y-2 relative">
+             <h2 className="text-xl font-black text-white uppercase tracking-tight">Complete Your Setup</h2>
+             <p className="text-white/80 text-sm">Please create your business profile and GSTIN details to enable invoice scanning and tax analytics.</p>
+          </div>
+          <Link to="/profile" className="btn-secondary !bg-white !text-primary-600 px-8 py-3 font-black text-xs uppercase tracking-widest relative z-10 shrink-0">
+             Setup Profile
+          </Link>
+        </motion.div>
+      )}
+
       {/* Header */}
       <motion.div variants={itemVariants} className="page-header !mb-4 sm:!mb-6">
         <div>
           <h1 className="section-title text-xl sm:text-2xl">Operations Dashboard</h1>
           <p className="text-slate-400 text-xs sm:text-sm mt-1">Real-time GST compliance and invoice tracking</p>
         </div>
-        <Link to="/upload" className="btn-primary w-full sm:w-auto flex items-center gap-2 group">
+        <Link 
+          to="/upload" 
+          className={clsx(
+            "btn-primary w-full sm:w-auto flex items-center gap-2 group",
+            profileMissing && "opacity-50 pointer-events-none cursor-not-allowed"
+          )}
+        >
           <Upload size={16} className="group-hover:-translate-y-0.5 transition-transform" /> 
           Upload New Invoice
         </Link>

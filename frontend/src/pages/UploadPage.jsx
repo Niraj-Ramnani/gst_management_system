@@ -46,7 +46,16 @@ export default function UploadPage() {
       navigate('/dashboard')
 
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Upload failed')
+      const detail = err.response?.data?.detail || 'Upload failed'
+      if (err.response?.status === 400 && detail.toLowerCase().includes('profile')) {
+        toast.error(() => (
+          <span className="flex items-center gap-2">
+            {detail} <button onClick={() => navigate('/profile')} className="font-bold underline ml-2">Setup Profile</button>
+          </span>
+        ), { duration: 5000 })
+      } else {
+        toast.error(detail)
+      }
     } finally {
       setUploading(false)
     }
