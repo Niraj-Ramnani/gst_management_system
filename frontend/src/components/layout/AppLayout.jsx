@@ -14,7 +14,7 @@ export default function AppLayout() {
   }, [location.pathname])
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-950">
+    <div className="flex h-screen overflow-hidden bg-transparent">
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       
       <div className="flex flex-col flex-1 overflow-hidden relative">

@@ -35,7 +35,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       </AnimatePresence>
 
       <aside className={clsx(
-        "fixed inset-y-0 left-0 w-72 bg-[#020617]/95 backdrop-blur-3xl border-r border-white/5 flex flex-col h-screen shrink-0 z-50 transition-transform duration-500 ease-[0.16, 1, 0.3, 1] lg:relative lg:translate-x-0 lg:w-72",
+        "fixed inset-y-0 left-0 w-[280px] min-w-[280px] shrink-0 bg-[#020617]/95 backdrop-blur-3xl border-r border-white/5 flex flex-col h-screen z-50 transition-transform duration-500 ease-[0.16, 1, 0.3, 1] lg:relative lg:translate-x-0 lg:w-[280px]",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="absolute inset-0 bg-gradient-to-b from-primary-500/[0.03] to-transparent pointer-events-none" />

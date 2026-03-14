@@ -174,7 +174,7 @@ export default function DashboardPage() {
           color="purple"
           subtitle="Available Credit"
         />
-        <div className="card p-5 sm:p-6 flex flex-col justify-between bg-gradient-to-br from-primary-500/10 to-indigo-500/5 border border-primary-500/20 relative overflow-hidden group">
+        <div className="card p-6 flex flex-col justify-between bg-gradient-to-br from-primary-500/10 to-indigo-500/5 border border-primary-500/20 relative overflow-hidden group h-[160px]">
            <div className="absolute -right-8 -top-8 w-32 h-32 bg-primary-500/10 blur-3xl rounded-full group-hover:scale-150 transition-transform duration-700" />
            <div className="flex items-center justify-between mb-4">
               <span className="text-[10px] font-black uppercase tracking-widest text-primary-400">System Status</span>
@@ -183,9 +183,9 @@ export default function DashboardPage() {
                 <span className="text-[9px] text-success-400 font-bold">Live</span>
               </div>
            </div>
-           <div>
-             <p className="text-3xl sm:text-4xl font-black text-white font-tabular leading-none">99.8<span className="text-base text-slate-500 ml-0.5">%</span></p>
-             <p className="text-[10px] text-slate-500 font-bold mt-2 uppercase tracking-wider">Extraction Accuracy</p>
+           <div className="flex flex-col flex-1 min-w-0 justify-end">
+             <p className="text-3xl sm:text-4xl font-black text-white font-tabular leading-none truncate w-full" title="99.8%">99.8<span className="text-base text-slate-500 ml-0.5">%</span></p>
+             <p className="text-[10px] text-slate-500 font-bold mt-2 uppercase tracking-wider truncate w-full">Extraction Accuracy</p>
            </div>
            <div className="mt-4 flex items-center gap-1.5">
              <div className="h-1 flex-1 bg-white/5 rounded-full overflow-hidden">
@@ -198,7 +198,7 @@ export default function DashboardPage() {
       {/* Charts & Actions Row */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Monthly Tax Trend */}
-        <motion.div variants={itemVariants} className="card p-5 sm:p-6 lg:col-span-8 relative overflow-hidden group">
+        <motion.div variants={itemVariants} className="card p-6 lg:col-span-8 relative overflow-hidden group">
           <div className="flex items-center justify-between mb-6">
             <h3 className="section-title text-base sm:text-lg">Revenue & Tax Analytics</h3>
             <Link to="/reports" className="text-[10px] font-black uppercase tracking-widest text-primary-400 hover:text-primary-300 flex items-center gap-1 group/link">
@@ -238,7 +238,7 @@ export default function DashboardPage() {
         {/* Info Column */}
         <div className="lg:col-span-4 space-y-6">
           {/* Invoice Status Breakdown */}
-          <motion.div variants={itemVariants} className="card p-5 sm:p-6">
+          <motion.div variants={itemVariants} className="card p-6">
             <h3 className="section-title text-base mb-6">Compliance Status</h3>
             <div className="space-y-4">
               {invoiceSummary?.by_status && Object.entries(invoiceSummary.by_status).map(([status, count]) => {
@@ -271,7 +271,7 @@ export default function DashboardPage() {
           </motion.div>
 
           {/* New Quick Stats Card */}
-          <motion.div variants={itemVariants} className="card p-5 bg-gradient-to-br from-indigo-900/20 to-transparent border border-indigo-500/10">
+          <motion.div variants={itemVariants} className="card p-6 bg-gradient-to-br from-indigo-900/20 to-transparent border border-indigo-500/10">
              <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
                    <Clock size={16} className="text-indigo-400" />
@@ -352,7 +352,7 @@ export default function DashboardPage() {
             { to: '/reports', icon: TrendingUp, label: 'Annual Analytics', desc: 'Yearly GST performance', color: 'text-success-400 bg-success-500/10', border: 'border-success-500/20 hover:border-success-500/40' },
             { to: '/forecast', icon: TrendingUp, label: 'Tax Projection', desc: 'Predict future liabilities', color: 'text-purple-400 bg-purple-500/10', border: 'border-purple-500/20 hover:border-purple-500/40' },
           ].map(({ to, icon: Icon, label, desc, color, border }) => (
-            <Link key={to} to={to} className={`card p-5 flex items-center gap-4 hover:translate-x-1.5 group transition-all duration-300 border ${border}`}>
+            <Link key={to} to={to} className={`card p-6 flex items-center gap-4 hover:translate-x-1.5 group transition-all duration-300 border ${border}`}>
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${color} border border-white/5 group-hover:scale-110 transition-transform duration-300`}>
                 <Icon size={22} className="group-hover:rotate-12 transition-transform duration-300" />
               </div>

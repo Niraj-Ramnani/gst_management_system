@@ -50,7 +50,7 @@
 
   /* Structural containers */
   [data-theme="light"] aside {
-    background-color: #ffffff !important;
+    background-color: #f3f4f6 !important;
     border-color: #e2e8f0 !important;
   }
 
@@ -61,6 +61,10 @@
 
   [data-theme="light"] main {
     background-color: transparent;
+  }
+  
+  [data-theme="light"] .bg-slate-950, [data-theme="light"] .bg-\[\#020617\] {
+    background-color: transparent !important;
   }
 
   /* Apply light bg to the dark root wrappers */
@@ -85,7 +89,7 @@
 @layer components {
   /* Premium Glassmorphism */
   .card { 
-    @apply bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl transition-all duration-500;
+    @apply bg-[#0f1729] backdrop-blur-xl border border-primary-500/20 rounded-2xl shadow-2xl transition-all duration-500 p-6;
   }
   .card:hover {
     @apply border-primary-500/30 shadow-primary-500/10 bg-slate-900/60 translate-y-[-2px];
@@ -155,7 +159,7 @@
   
   /* KPI Cards */
   .kpi-card { 
-    @apply card p-6 flex flex-col gap-3 relative overflow-hidden; 
+    @apply card flex flex-col justify-between relative overflow-hidden h-[160px]; 
   }
   .kpi-card-glow {
     @apply absolute -inset-px bg-gradient-to-r from-primary-500/0 via-primary-500/20 to-primary-500/0 opacity-0 transition-opacity duration-500;

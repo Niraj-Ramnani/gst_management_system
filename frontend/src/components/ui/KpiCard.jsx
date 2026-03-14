@@ -14,7 +14,7 @@ export default function KpiCard({ title, value, subtitle, icon: Icon, color = 'p
   return (
     <motion.div 
       whileHover={{ y: -8, transition: { duration: 0.3, ease: 'easeOut' } }}
-      className="kpi-card group border border-white/5 bg-slate-900/40 backdrop-blur-xl p-6 rounded-3xl transition-all duration-500"
+      className="kpi-card group border border-white/5 bg-slate-900/40 backdrop-blur-xl rounded-3xl transition-all duration-500"
     >
       <div className="kpi-card-glow" />
       <div className="absolute top-0 right-0 p-12 -mr-12 -mt-12 bg-gradient-to-br from-primary-500/10 to-transparent rounded-full blur-3xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -41,15 +41,25 @@ export default function KpiCard({ title, value, subtitle, icon: Icon, color = 'p
         )}
       </div>
       
-      <div className="relative z-10">
-        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1.5 ml-0.5">{title}</p>
-        <div className="flex items-baseline gap-2">
-          <h4 className="text-2xl sm:text-3xl font-display font-black text-white tracking-tight font-tabular leading-none">{value}</h4>
+      <div className="relative z-10 flex flex-col flex-1 min-w-0">
+        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1.5 ml-0.5 truncate w-full">{title}</p>
+        <div className="flex items-baseline gap-2 w-full overflow-hidden">
+          <h4 
+            className={clsx(
+              "font-display font-black text-white tracking-tight font-tabular leading-none truncate w-full transition-all duration-300",
+              String(value).length > 12 ? "text-base sm:text-lg" : 
+              String(value).length > 8 ? "text-lg sm:text-xl" : 
+              "text-2xl sm:text-3xl"
+            )}
+            title={String(value)}
+          >
+            {value}
+          </h4>
         </div>
         {subtitle && (
-          <p className="text-xs font-semibold text-slate-500 mt-4 flex items-center gap-2 group-hover:text-slate-400 transition-colors">
-            <span className={clsx("w-1.5 h-1.5 rounded-full", trend === 'up' ? "bg-success-500" : trend === 'down' ? "bg-danger-500" : "bg-slate-600")} />
-            {subtitle}
+          <p className="text-xs font-semibold text-slate-500 mt-4 flex items-center gap-2 group-hover:text-slate-400 transition-colors truncate w-full">
+            <span className={clsx("w-1.5 h-1.5 rounded-full shrink-0", trend === 'up' ? "bg-success-500" : trend === 'down' ? "bg-danger-500" : "bg-slate-600")} />
+            <span className="truncate">{subtitle}</span>
           </p>
         )}
       </div>
