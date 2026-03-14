@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Zap, Shield, TrendingUp, FileText, ArrowRight, CheckCircle, BarChart3, Globe, Sparkles, Cpu, Layers, MousePointer2, Upload } from 'lucide-react'
+import { Zap, Shield, TrendingUp, FileText, ArrowRight, CheckCircle, BarChart3, Globe, Sparkles, Cpu, Layers, MousePointer2, Upload, Sun, Moon } from 'lucide-react'
+import { useTheme } from '../context/ThemeContext'
 
 const features = [
   { icon: FileText, title: 'AI Invoice Extraction', desc: 'Enterprise-grade neural networks extract GST fields from raw data with 99.9% precision.', color: 'text-primary-400' },
@@ -37,8 +38,16 @@ const pulseVariants = {
 }
 
 export default function LandingPage() {
+  const { theme, toggleTheme } = useTheme()
+
   return (
-    <div className="min-h-screen bg-[#020617] text-white selection:bg-primary-500/30 selection:text-white overflow-x-hidden">
+    <div
+      className="min-h-screen text-white selection:bg-primary-500/30 selection:text-white overflow-x-hidden transition-all duration-500"
+      style={{
+        backgroundColor: theme === 'light' ? '#f1f5f9' : '#020617',
+        color: theme === 'light' ? '#0f172a' : '#f1f5f9',
+      }}
+    >
       {/* Background Ornaments */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-900/10 blur-[120px] rounded-full" />
@@ -54,20 +63,41 @@ export default function LandingPage() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="sticky top-0 z-50 px-6 py-5"
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 rounded-2xl bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl shadow-2xl">
+        <div
+          className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 rounded-2xl backdrop-blur-xl shadow-2xl border transition-all duration-300"
+          style={{
+            backgroundColor: theme === 'light' ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.02)',
+            borderColor: theme === 'light' ? 'rgba(226,232,240,0.8)' : 'rgba(255,255,255,0.05)',
+          }}
+        >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-glow-primary">
               <Zap size={20} className="text-white" fill="white" />
             </div>
-            <span className="font-display font-black text-xl tracking-tight">GST<span className="text-primary-400">Smart</span></span>
+            <span className="font-display font-black text-xl tracking-tight" style={{ color: theme === 'light' ? '#0f172a' : '#f1f5f9' }}>GST<span className="text-primary-400">Smart</span></span>
           </div>
           <div className="hidden md:flex items-center gap-8 px-8">
-            <a href="#process" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-all">Process</a>
-            <a href="#features" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-all">Engine</a>
-            <a href="#compliance" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-all">Compliance</a>
+            <a href="#process" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary-500 transition-all">Process</a>
+            <a href="#features" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary-500 transition-all">Engine</a>
+            <a href="#compliance" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary-500 transition-all">Compliance</a>
           </div>
-          <div className="flex items-center gap-6">
-            <Link to="/login" className="text-sm font-bold text-slate-400 hover:text-white transition-colors">Sign In</Link>
+          <div className="flex items-center gap-3">
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="w-9 h-9 rounded-xl flex items-center justify-center border transition-all duration-300 hover:scale-105 active:scale-95"
+              style={{
+                backgroundColor: theme === 'light' ? 'rgba(14,165,233,0.1)' : 'rgba(255,255,255,0.04)',
+                borderColor: theme === 'light' ? 'rgba(14,165,233,0.25)' : 'rgba(255,255,255,0.08)',
+              }}
+            >
+              {theme === 'dark'
+                ? <Moon size={16} className="text-slate-400" />
+                : <Sun size={16} className="text-amber-500" />
+              }
+            </button>
+            <Link to="/login" className="text-sm font-bold text-slate-400 hover:text-primary-400 transition-colors">Sign In</Link>
             <Link to="/register" className="btn-primary text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-xl">
               Get Started
             </Link>
