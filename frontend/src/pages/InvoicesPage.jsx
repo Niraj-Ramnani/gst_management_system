@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { FileText, Search, Filter, Upload, ChevronLeft, ChevronRight, ArrowRight, Download } from 'lucide-react'
 import { invoiceService } from '../services/api'
 import StatusBadge from '../components/ui/StatusBadge'
-import LoadingSpinner from '../components/ui/LoadingSpinner'
+import { TableSkeleton } from '../components/ui/Skeleton'
 import EmptyState from '../components/ui/EmptyState'
 import { formatCurrency, formatDate } from '../utils/formatters'
 import clsx from 'clsx'
@@ -59,12 +59,13 @@ export default function InvoicesPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 animate-in">
+      {/* Header */}
       <div className="page-header !mb-6 sm:!mb-10">
         <div>
-          <h1 className="section-title text-xl sm:text-2xl">Invoice Repository</h1>
-          <p className="text-slate-400 text-xs sm:text-sm mt-0.5">{total} processed documents</p>
+          <h1 className="section-title text-xl sm:text-3xl">Invoice Repository</h1>
+          <p className="text-slate-500 text-xs sm:text-sm mt-1 font-medium">{total} processed documents</p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           <button 
             onClick={handleExport}
             className="btn-secondary flex items-center justify-center gap-2 group"
@@ -78,7 +79,7 @@ export default function InvoicesPage() {
       </div>
 
       {/* Filters Overlay */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white/[0.01] border border-white/[0.05] p-3 rounded-2xl backdrop-blur-md">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white/[0.02] border border-white/[0.05] p-3 rounded-2xl backdrop-blur-md">
         <div className="flex gap-3 overflow-x-auto pb-1 sm:pb-0 custom-scrollbar w-full sm:w-auto">
           <div className="relative shrink-0">
             <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
@@ -120,8 +121,8 @@ export default function InvoicesPage() {
       {/* Content */}
       <div className="space-y-4">
         {loading ? (
-          <div className="card py-16 flex items-center justify-center">
-            <LoadingSpinner size="lg" />
+          <div className="card p-8">
+            <TableSkeleton rows={7} />
           </div>
         ) : invoices.length === 0 ? (
           <div className="card">
@@ -149,7 +150,7 @@ export default function InvoicesPage() {
                     {invoices.map(inv => (
                       <tr 
                         key={inv.id} 
-                        className="hover:bg-primary-500/[0.03] transition-all group cursor-pointer relative" 
+                        className="hover:bg-primary-500/[0.03] border-l-2 border-l-transparent hover:border-l-primary-500/40 transition-all duration-200 group cursor-pointer" 
                         onClick={() => navigate(`/invoices/${inv.id}`)}
                       >
                         <td className="px-6 py-4">

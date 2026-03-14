@@ -13,23 +13,27 @@ export default function KpiCard({ title, value, subtitle, icon: Icon, color = 'p
 
   return (
     <motion.div 
-      whileHover={{ y: -5, transition: { duration: 0.2 } }}
-      className="kpi-card relative overflow-hidden group border border-slate-800/60 bg-[#0b1120] p-6 rounded-2x transition-all duration-300"
+      whileHover={{ y: -8, transition: { duration: 0.3, ease: 'easeOut' } }}
+      className="kpi-card group border border-white/5 bg-slate-900/40 backdrop-blur-xl p-6 rounded-3xl transition-all duration-500"
     >
-      <div className="absolute top-0 right-0 p-8 -mr-8 -mt-8 bg-gradient-to-br from-white/[0.03] to-transparent rounded-full blur-2xl pointer-events-none" />
+      <div className="kpi-card-glow" />
+      <div className="absolute top-0 right-0 p-12 -mr-12 -mt-12 bg-gradient-to-br from-primary-500/10 to-transparent rounded-full blur-3xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       
-      <div className="flex items-start justify-between relative z-10 mb-5">
+      <div className="flex items-start justify-between relative z-10 mb-6">
         {Icon && (
-          <div className={clsx('p-3 rounded-2xl border transition-transform group-hover:scale-110 duration-500', colorMap[color])}>
-            <Icon size={22} strokeWidth={2.5} />
+          <div className={clsx(
+            'p-3.5 rounded-2xl border transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(var(--primary),0.2)]', 
+            colorMap[color]
+          )}>
+            <Icon size={24} strokeWidth={2.5} />
           </div>
         )}
         {trend && (
           <div className={clsx(
-            'flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-2.5 py-1.5 rounded-xl border',
-            trend === 'up' ? 'bg-success-500/5 text-success-400 border-success-500/20' :
-            trend === 'down' ? 'bg-danger-500/5 text-danger-400 border-danger-500/20' :
-            'bg-slate-800/50 text-slate-400 border-slate-700/50'
+            'flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border shadow-sm',
+            trend === 'up' ? 'bg-success-500/10 text-success-400 border-success-500/20 shadow-success-500/5' :
+            trend === 'down' ? 'bg-danger-500/10 text-danger-400 border-danger-500/20 shadow-danger-500/5' :
+            'bg-slate-800/80 text-slate-400 border-slate-700/50'
           )}>
             {trend === 'up' ? <TrendingUp size={12} strokeWidth={3} /> : trend === 'down' ? <TrendingDown size={12} strokeWidth={3} /> : <Minus size={12} strokeWidth={3} />}
             {trendValue}
@@ -38,13 +42,13 @@ export default function KpiCard({ title, value, subtitle, icon: Icon, color = 'p
       </div>
       
       <div className="relative z-10">
-        <p className="text-sm font-bold text-slate-500 uppercase tracking-[0.05em] mb-1">{title}</p>
+        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1.5 ml-0.5">{title}</p>
         <div className="flex items-baseline gap-2">
-          <h4 className="text-3xl font-sans font-bold text-white tracking-tight font-tabular">{value}</h4>
+          <h4 className="text-4xl font-display font-black text-white tracking-tight font-tabular leading-none">{value}</h4>
         </div>
         {subtitle && (
-          <p className="text-xs font-medium text-slate-600 mt-2 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-700" />
+          <p className="text-xs font-semibold text-slate-500 mt-4 flex items-center gap-2 group-hover:text-slate-400 transition-colors">
+            <span className={clsx("w-1.5 h-1.5 rounded-full", trend === 'up' ? "bg-success-500" : trend === 'down' ? "bg-danger-500" : "bg-slate-600")} />
             {subtitle}
           </p>
         )}

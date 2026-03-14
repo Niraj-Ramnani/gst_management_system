@@ -1,6 +1,7 @@
-import { Bell, LogOut, Search, Menu } from 'lucide-react'
+import { Bell, LogOut, Search, Menu, Sun, Moon } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useNotification } from '../../context/NotificationContext'
+import { useTheme } from '../../context/ThemeContext'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -9,6 +10,7 @@ import NotificationDropdown from './NotificationDropdown'
 export default function TopNav({ onMenuClick }) {
   const { logout, user } = useAuth()
   const { unreadCount } = useNotification()
+  const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const [notificationsOpen, setNotificationsOpen] = useState(false)
 
@@ -58,6 +60,39 @@ export default function TopNav({ onMenuClick }) {
           />
         </div>
         
+        <div className="h-6 w-px bg-white/5 mx-1 sm:mx-2" />
+
+        {/* Theme toggle */}
+        <button
+          onClick={toggleTheme}
+          title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          className="relative w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-xl sm:rounded-2xl transition-all border border-transparent hover:border-white/10 overflow-hidden group"
+          style={{
+            background: theme === 'light'
+              ? 'rgba(14, 165, 233, 0.08)'
+              : 'rgba(255, 255, 255, 0.03)',
+          }}
+        >
+          <span
+            className="absolute inset-0 flex items-center justify-center transition-all duration-500"
+            style={{
+              opacity: theme === 'dark' ? 1 : 0,
+              transform: theme === 'dark' ? 'rotate(0deg) scale(1)' : 'rotate(90deg) scale(0)',
+            }}
+          >
+            <Moon size={18} className="text-slate-400 group-hover:text-primary-400 transition-colors" />
+          </span>
+          <span
+            className="absolute inset-0 flex items-center justify-center transition-all duration-500"
+            style={{
+              opacity: theme === 'light' ? 1 : 0,
+              transform: theme === 'light' ? 'rotate(0deg) scale(1)' : 'rotate(-90deg) scale(0)',
+            }}
+          >
+            <Sun size={18} className="text-amber-400" />
+          </span>
+        </button>
+
         <div className="h-6 w-px bg-white/5 mx-1 sm:mx-2" />
         
         <button

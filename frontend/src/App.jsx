@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { NotificationProvider } from './context/NotificationContext'
+import { ThemeProvider } from './context/ThemeContext'
 import { lazy, Suspense } from 'react'
 import AppLayout from './components/layout/AppLayout'
 
@@ -34,8 +35,9 @@ function PublicRoute({ children }) {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <NotificationProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <NotificationProvider>
         <BrowserRouter>
           <Toaster
             position="top-right"
@@ -65,5 +67,6 @@ export default function App() {
         </BrowserRouter>
       </NotificationProvider>
     </AuthProvider>
+    </ThemeProvider>
   )
 }
