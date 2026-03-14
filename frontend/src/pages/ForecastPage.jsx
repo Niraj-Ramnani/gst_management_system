@@ -114,7 +114,7 @@ export default function ForecastPage() {
                     Trend: <span className="capitalize">{data?.trend}</span>
                   </div>
                   <span className="text-slate-600">·</span>
-                  <span className="text-slate-400 text-sm">Model: Prophet / ARIMA</span>
+                  <span className="text-slate-400 text-sm">Model: Prophet</span>
                 </div>
               </div>
             </div>

@@ -32,6 +32,7 @@ export const invoiceService = {
   get: (id) => api.get(`/invoices/${id}`),
   review: (id, data) => api.put(`/invoices/${id}/review`, data),
   reparse: (id) => api.post(`/invoices/${id}/reparse`),
+  exportExcel: (params) => api.get('/invoices/export', { params, responseType: 'blob' }),
 }
 
 export const businessService = {

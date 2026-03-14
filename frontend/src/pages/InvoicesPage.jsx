@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { FileText, Search, Filter, Upload, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react'
+import { FileText, Search, Filter, Upload, ChevronLeft, ChevronRight, ArrowRight, Download } from 'lucide-react'
 import { invoiceService } from '../services/api'
 import StatusBadge from '../components/ui/StatusBadge'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
@@ -36,40 +36,84 @@ export default function InvoicesPage() {
     }
   }, [page, statusFilter, typeFilter])
 
+  const handleExport = async () => {
+    try {
+      const params = {}
+      if (statusFilter) params.status = statusFilter
+      if (typeFilter) params.invoice_type = typeFilter
+      
+      const response = await invoiceService.exportExcel(params)
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `invoices_export_${new Date().getTime()}.xlsx`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+    } catch (error) {
+      console.error('Export failed:', error)
+    }
+  }
+
   useEffect(() => { loadInvoices() }, [loadInvoices])
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-in">
+    <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 animate-in">
       <div className="page-header !mb-6 sm:!mb-10">
         <div>
           <h1 className="section-title text-xl sm:text-2xl">Invoice Repository</h1>
           <p className="text-slate-400 text-xs sm:text-sm mt-0.5">{total} processed documents</p>
         </div>
-        <Link to="/upload" className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 group">
-          <Upload size={16} className="group-hover:-translate-y-0.5 transition-transform" /> Scan New
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <button 
+            onClick={handleExport}
+            className="btn-secondary flex items-center justify-center gap-2 group"
+          >
+            <Download size={16} className="group-hover:translate-y-0.5 transition-transform" /> Export Excel
+          </button>
+          <Link to="/upload" className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 group">
+            <Upload size={16} className="group-hover:-translate-y-0.5 transition-transform" /> Scan New
+          </Link>
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
-        <div className="relative shrink-0">
-          <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
-          <select
-            value={statusFilter}
-            onChange={e => { setStatusFilter(e.target.value); setPage(1) }}
-            className="input pl-9 pr-8 py-2 text-[10px] font-black uppercase tracking-widest appearance-none cursor-pointer min-w-[150px] bg-slate-900/40"
-          >
-            {STATUSES.map(s => <option key={s} value={s}>{s ? s.replace(/_/g, ' ') : 'All statuses'}</option>)}
-          </select>
+      {/* Filters Overlay */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white/[0.01] border border-white/[0.05] p-3 rounded-2xl backdrop-blur-md">
+        <div className="flex gap-3 overflow-x-auto pb-1 sm:pb-0 custom-scrollbar w-full sm:w-auto">
+          <div className="relative shrink-0">
+            <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
+            <select
+              value={statusFilter}
+              onChange={e => { setStatusFilter(e.target.value); setPage(1) }}
+              className="input pl-9 pr-10 py-2.5 text-[10px] font-black uppercase tracking-widest appearance-none cursor-pointer min-w-[170px] bg-slate-900/60 border-white/5 focus:border-primary-500/50"
+            >
+              {STATUSES.map(s => <option key={s} value={s} className="bg-slate-900">{s ? s.replace(/_/g, ' ') : 'All statuses'}</option>)}
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-600">
+               <ArrowRight size={12} className="rotate-90" />
+            </div>
+          </div>
+          <div className="relative shrink-0">
+            <select
+              value={typeFilter}
+              onChange={e => { setTypeFilter(e.target.value); setPage(1) }}
+              className="input px-4 pr-10 py-2.5 text-[10px] font-black uppercase tracking-widest appearance-none cursor-pointer min-w-[140px] bg-slate-900/60 border-white/5 focus:border-primary-500/50"
+            >
+              {TYPES.map(t => <option key={t} value={t} className="bg-slate-900">{t ? `${t}s` : 'All Types'}</option>)}
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-600">
+               <ArrowRight size={12} className="rotate-90" />
+            </div>
+          </div>
         </div>
-        <div className="relative shrink-0">
-          <select
-            value={typeFilter}
-            onChange={e => { setTypeFilter(e.target.value); setPage(1) }}
-            className="input px-4 py-2 text-[10px] font-black uppercase tracking-widest appearance-none cursor-pointer min-w-[130px] bg-slate-900/40"
-          >
-            {TYPES.map(t => <option key={t} value={t}>{t ? `${t}s` : 'All Types'}</option>)}
-          </select>
+        <div className="hidden sm:block h-6 w-px bg-white/5 mx-2" />
+        <div className="relative flex-1 w-full max-w-sm">
+           <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+           <input 
+              type="text" 
+              placeholder="QUICK SEARCH SUPPLIER OR GSTIN..." 
+              className="w-full bg-slate-950/40 border-white/5 rounded-xl py-2.5 pl-11 pr-4 text-[10px] font-bold tracking-widest text-slate-300 placeholder:text-slate-600 focus:border-primary-500/30 outline-none transition-all uppercase"
+           />
         </div>
       </div>
 
@@ -91,41 +135,61 @@ export default function InvoicesPage() {
         ) : (
           <>
             {/* Desktop Table View */}
-            <div className="hidden lg:block card overflow-hidden">
+            <div className="hidden lg:block card overflow-hidden !p-0 border-white/5">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-sm border-collapse">
                   <thead>
-                    <tr className="border-b border-white/5 bg-white/[0.01]">
-                      {['Invoice #', 'Supplier', 'Date', 'Taxable', 'GST Details', 'Total Amount', 'Status', ''].map(h => (
-                        <th key={h} className="text-left px-6 py-4 text-slate-500 font-bold text-[10px] uppercase tracking-widest whitespace-nowrap">{h}</th>
+                    <tr className="border-b border-white/5 bg-slate-900/40 backdrop-blur-lg">
+                      {['Invoice #', 'Entity Details', 'Date', 'Taxable', 'GST Ledger', 'Gross Total', 'Status', ''].map(h => (
+                        <th key={h} className="text-left px-6 py-5 text-slate-500 font-black text-[9px] uppercase tracking-[0.2em] whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/[0.03]">
+                  <tbody className="divide-y divide-white/[0.02]">
                     {invoices.map(inv => (
-                      <tr key={inv.id} className="hover:bg-white/[0.02] transition-colors group cursor-pointer" onClick={() => navigate(`/invoices/${inv.id}`)}>
+                      <tr 
+                        key={inv.id} 
+                        className="hover:bg-primary-500/[0.03] transition-all group cursor-pointer relative" 
+                        onClick={() => navigate(`/invoices/${inv.id}`)}
+                      >
                         <td className="px-6 py-4">
-                          <span className="font-mono text-xs text-slate-400">{inv.invoice_number || '—'}</span>
+                           <div className="flex items-center gap-3">
+                              <div className="w-1.5 h-1.5 rounded-full bg-slate-800 group-hover:bg-primary-500 transition-colors" />
+                              <span className="font-mono text-xs text-slate-400 font-bold">{inv.invoice_number || 'TRX-XXXX'}</span>
+                           </div>
                         </td>
                         <td className="px-6 py-4">
                           <div>
-                            <p className="text-slate-100 font-bold truncate max-w-[200px]">{inv.supplier_name || inv.original_filename}</p>
-                            {inv.supplier_gstin && <p className="text-[10px] text-slate-500 font-mono tracking-tight">{inv.supplier_gstin}</p>}
+                            <p className="text-slate-100 font-black text-sm truncate max-w-[200px] mb-0.5 group-hover:text-primary-400 transition-colors">{inv.supplier_name || inv.original_filename}</p>
+                            {inv.supplier_gstin && <p className="text-[10px] text-slate-600 font-mono tracking-tighter uppercase">{inv.supplier_gstin}</p>}
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-slate-400 text-xs">{formatDate(inv.invoice_date)}</td>
-                        <td className="px-6 py-4 text-slate-300 font-bold text-xs">{formatCurrency(inv.taxable_amount)}</td>
                         <td className="px-6 py-4">
-                          <div className="flex flex-wrap gap-2">
-                             {inv.cgst > 0 && <span className="text-[9px] px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">C:{formatCurrency(inv.cgst)}</span>}
-                             {inv.sgst > 0 && <span className="text-[9px] px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">S:{formatCurrency(inv.sgst)}</span>}
-                             {inv.igst > 0 && <span className="text-[9px] px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">I:{formatCurrency(inv.igst)}</span>}
+                           <span className="text-slate-400 text-[11px] font-bold">{formatDate(inv.invoice_date)}</span>
+                        </td>
+                        <td className="px-6 py-4">
+                           <span className="text-slate-300 font-bold text-xs font-tabular">{formatCurrency(inv.taxable_amount)}</span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-wrap gap-1.5 font-tabular">
+                             {inv.cgst > 0 && <span className="text-[8px] px-1.5 py-0.5 bg-slate-900 border border-white/5 rounded font-bold text-slate-500">C:{formatCurrency(inv.cgst)}</span>}
+                             {inv.sgst > 0 && <span className="text-[8px] px-1.5 py-0.5 bg-slate-900 border border-white/5 rounded font-bold text-slate-500">S:{formatCurrency(inv.sgst)}</span>}
+                             {inv.igst > 0 && <span className="text-[8px] px-1.5 py-0.5 bg-slate-900 border border-white/5 rounded font-bold text-slate-500">I:{formatCurrency(inv.igst)}</span>}
+                             {!inv.cgst && !inv.sgst && !inv.igst && <span className="text-[8px] text-slate-700 italic">No tax entry</span>}
                           </div>
                         </td>
-                        <td className="px-6 py-4 font-black text-white">{formatCurrency(inv.total_amount)}</td>
-                        <td className="px-6 py-4"><StatusBadge status={inv.status} /></td>
+                        <td className="px-6 py-4">
+                           <span className="text-sm font-bold text-white font-tabular">{formatCurrency(inv.total_amount)}</span>
+                        </td>
+                        <td className="px-6 py-4">
+                           <div className="scale-90 origin-left">
+                              <StatusBadge status={inv.status} />
+                           </div>
+                        </td>
                         <td className="px-6 py-4 text-right">
-                          <ArrowRight size={14} className="text-slate-600 group-hover:text-primary-400 group-hover:translate-x-1 transition-all" />
+                          <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:bg-primary-500/20 group-hover:text-primary-400 transition-all">
+                             <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -157,7 +221,7 @@ export default function InvoicesPage() {
                   <div className="flex justify-between items-end pt-3 border-t border-white/5">
                     <div>
                       <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Total Payable</p>
-                      <p className="text-sm font-black text-white">{formatCurrency(inv.total_amount)}</p>
+                      <p className="text-sm font-bold text-white font-tabular">{formatCurrency(inv.total_amount)}</p>
                     </div>
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 group-hover:bg-primary-500/20 text-slate-500 group-hover:text-primary-400 transition-colors">
                       <ArrowRight size={14} />

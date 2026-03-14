@@ -40,7 +40,7 @@ export default function KpiCard({ title, value, subtitle, icon: Icon, color = 'p
       <div className="relative z-10">
         <p className="text-sm font-bold text-slate-500 uppercase tracking-[0.05em] mb-1">{title}</p>
         <div className="flex items-baseline gap-2">
-          <h4 className="text-3xl font-display font-black text-white tracking-tight">{value}</h4>
+          <h4 className="text-3xl font-sans font-bold text-white tracking-tight font-tabular">{value}</h4>
         </div>
         {subtitle && (
           <p className="text-xs font-medium text-slate-600 mt-2 flex items-center gap-1.5">

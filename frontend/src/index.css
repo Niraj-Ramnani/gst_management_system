@@ -95,6 +95,10 @@
 
   .section-title { @apply text-2xl font-black text-white tracking-tight; }
   .page-header { @apply flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 animate-in; }
+  
+  .font-tabular {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 @keyframes slideUp {

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Zap, Shield, TrendingUp, FileText, ArrowRight, CheckCircle, BarChart3, Globe, Sparkles } from 'lucide-react'
+import { Zap, Shield, TrendingUp, FileText, ArrowRight, CheckCircle, BarChart3, Globe, Sparkles, Cpu, Layers, MousePointer2, Upload } from 'lucide-react'
 
 const features = [
   { icon: FileText, title: 'AI Invoice Extraction', desc: 'Enterprise-grade neural networks extract GST fields from raw data with 99.9% precision.', color: 'text-primary-400' },
@@ -9,6 +9,13 @@ const features = [
   { icon: Globe, title: 'Universal Connectivity', desc: 'Seamlessly connects with common business tools and native GST portals for data syncing.', color: 'text-cyan-400' },
   { icon: Sparkles, title: 'Auto- Reconciliation', desc: 'Intelligent matching between your purchase registry and automated platform extractions.', color: 'text-amber-400' },
   { icon: Shield, title: 'Audit Readiness', desc: 'Maintain a pristine digital audit trail with tamper-proof logs and document storage.', color: 'text-danger-400' },
+]
+
+const steps = [
+  { icon: Upload, title: "01. Direct Ingestion", desc: "Drag and drop high-resolution PDF scans or direct API hooks." },
+  { icon: Cpu, title: "02. Neural Parsing", desc: "Our proprietary LLM extracts HSN, GSTIN, and line-item details." },
+  { icon: Layers, title: "03. Data Harmonization", desc: "Auto-mapping against your ERP master data for reconciliation." },
+  { icon: CheckCircle, title: "04. Compliance Ready", desc: "GSTR-ready outputs validated for 100% filing accuracy." }
 ]
 
 const containerVariants = {
@@ -22,6 +29,11 @@ const containerVariants = {
 const itemVariants = {
   hidden: { y: 30, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+}
+
+const pulseVariants = {
+  initial: { scale: 1, opacity: 0.5 },
+  animate: { scale: [1, 1.05, 1], opacity: [0.5, 0.8, 0.5], transition: { duration: 4, repeat: Infinity, ease: "easeInOut" } }
 }
 
 export default function LandingPage() {
@@ -48,6 +60,11 @@ export default function LandingPage() {
               <Zap size={20} className="text-white" fill="white" />
             </div>
             <span className="font-display font-black text-xl tracking-tight">GST<span className="text-primary-400">Smart</span></span>
+          </div>
+          <div className="hidden md:flex items-center gap-8 px-8">
+            <a href="#process" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-all">Process</a>
+            <a href="#features" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-all">Engine</a>
+            <a href="#compliance" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-all">Compliance</a>
           </div>
           <div className="flex items-center gap-6">
             <Link to="/login" className="text-sm font-bold text-slate-400 hover:text-white transition-colors">Sign In</Link>
@@ -80,7 +97,7 @@ export default function LandingPage() {
           Leverage high-performance AI extraction and predictive forecasting to eliminate compliance bottlenecks. Designed for scale, built for speed.
         </motion.p>
         
-        <motion.div variants={itemVariants} className="flex gap-5 justify-center flex-wrap">
+        <motion.div variants={itemVariants} className="flex gap-5 justify-center flex-wrap mb-24">
           <Link to="/register" className="btn-primary flex items-center gap-3 px-8 py-4 text-sm font-bold uppercase tracking-widest group shadow-[0_20px_50px_rgba(14,165,233,0.3)]">
             Explore the Platform <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
           </Link>
@@ -92,7 +109,7 @@ export default function LandingPage() {
         {/* Hero Decorative Elements */}
         <motion.div 
           variants={itemVariants}
-          className="mt-24 relative max-w-5xl mx-auto"
+          className="relative max-w-5xl mx-auto"
         >
           <div className="absolute inset-0 bg-primary-500/20 blur-[100px] -z-10 animate-pulse-slow rounded-full opacity-50" />
           <div className="card-glass border border-white/10 rounded-[2.5rem] p-4 shadow-2xl overflow-hidden aspect-video relative group">
@@ -113,10 +130,48 @@ export default function LandingPage() {
         </motion.div>
       </motion.section>
 
+      {/* Process Section */}
+      <section id="process" className="max-w-7xl mx-auto px-6 py-32 relative z-10">
+        <div className="text-center mb-24">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary-500 mb-4 block">The Workflow</span>
+          <h2 className="font-display font-black text-4xl md:text-5xl text-white tracking-tight">How GSTSmart Operates.</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+           {/* Connecting Line */}
+           <div className="hidden md:block absolute top-1/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent z-0" />
+           
+           {[
+             { icon: MousePointer2, title: "01. Intake", desc: "Drag and drop PDF scans or connect your ERP directly." },
+             { icon: Cpu, title: "02. Analysis", desc: "Our neural engine extracts HSN, GSTIN, and tax fields." },
+             { icon: Layers, title: "03. Matching", desc: "Auto-mapping against master data for ITC reconciliation." },
+             { icon: CheckCircle, title: "04. Output", desc: "GSTR-ready filings validated with 100% precision." }
+           ].map((step, idx) => (
+             <motion.div 
+               key={step.title}
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               transition={{ delay: idx * 0.1 }}
+               className="relative z-10 group"
+             >
+                <div className="w-16 h-16 rounded-2xl bg-slate-900 border border-white/10 flex items-center justify-center mb-8 mx-auto group-hover:border-primary-500/50 group-hover:shadow-glow-primary transition-all duration-500">
+                   <step.icon size={24} className="text-slate-400 group-hover:text-primary-400" />
+                </div>
+                <div className="text-center">
+                   <h3 className="text-sm font-black text-white uppercase tracking-widest mb-3">{step.title}</h3>
+                   <p className="text-slate-500 text-xs leading-relaxed font-medium px-4">{step.desc}</p>
+                </div>
+             </motion.div>
+           ))}
+        </div>
+      </section>
+
       {/* Features */}
-      <section className="bg-white/[0.02] border-y border-white/[0.05] relative z-10 overflow-hidden">
+      <section id="features" className="bg-white/[0.02] border-y border-white/[0.05] relative z-10 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 py-32">
           <div className="text-center mb-24">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary-500 mb-4 block">Core Engine</span>
             <h2 className="font-display font-black text-4xl text-white mb-4 tracking-tight">Enterprise Infrastructure.</h2>
             <p className="text-slate-500 font-medium">Powering the next generation of digital-first Indian companies.</p>
           </div>
@@ -142,7 +197,7 @@ export default function LandingPage() {
       </section>
 
       {/* Trust Checklist */}
-      <section className="max-w-5xl mx-auto px-6 py-32 text-center relative z-10">
+      <section id="compliance" className="max-w-5xl mx-auto px-6 py-32 text-center relative z-10">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -170,6 +225,23 @@ export default function LandingPage() {
             ))}
           </div>
         </motion.div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="max-w-7xl mx-auto px-6 py-32 relative z-10">
+         <div className="card-glass bg-gradient-to-br from-primary-900/20 to-transparent p-12 md:p-24 border border-white/10 rounded-[4rem] text-center relative overflow-hidden">
+            <motion.div 
+               variants={pulseVariants}
+               initial="initial"
+               animate="animate"
+               className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-600/10 blur-[150px] -z-10 rounded-full" 
+            />
+            <h2 className="font-display font-black text-5xl md:text-7xl text-white mb-8 tracking-tighter">Ready to Scale?</h2>
+            <p className="text-slate-400 text-lg mb-12 max-w-xl mx-auto font-medium">Join 500+ enterprises automating their GST compliance with military precision.</p>
+            <Link to="/register" className="btn-primary inline-flex items-center gap-3 px-12 py-5 text-sm font-bold uppercase tracking-widest group">
+               Create Business Account <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+         </div>
       </section>
 
       {/* Footer */}

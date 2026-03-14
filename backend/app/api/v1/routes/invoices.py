@@ -1,4 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Query, BackgroundTasks
+from fastapi.responses import StreamingResponse
+import io
+from openpyxl import Workbook
+from openpyxl.styles import Font, Alignment, PatternFill
 from typing import Optional
 import os, shutil, uuid
 from datetime import datetime
@@ -110,7 +114,7 @@ async def list_invoices(
         query = Invoice.find(Invoice.user_id == str(current_user.id), Invoice.invoice_type == invoice_type)
 
     total = await query.count()
-    invoices = await query.skip((page - 1) * page_size).limit(page_size).to_list()
+    invoices = await query.sort("-created_at").skip((page - 1) * page_size).limit(page_size).to_list()
 
     return InvoiceListResponse(
         invoices=[_to_response(inv) for inv in invoices],
@@ -118,6 +122,88 @@ async def list_invoices(
         page=page,
         page_size=page_size,
         total_pages=(total + page_size - 1) // page_size,
+    )
+
+
+@router.get("/export")
+async def export_invoices_excel(
+    status: Optional[InvoiceStatus] = None,
+    invoice_type: Optional[InvoiceType] = None,
+    current_user: User = Depends(get_current_user),
+):
+    """Exports invoices to an Excel file for the current user."""
+    query_criteria = [Invoice.user_id == str(current_user.id)]
+    if status:
+        query_criteria.append(Invoice.status == status)
+    if invoice_type:
+        query_criteria.append(Invoice.invoice_type == invoice_type)
+    
+    invoices = await Invoice.find(*query_criteria).sort("-created_at").to_list()
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Invoices"
+
+    # Header styling
+    header_font = Font(bold=True, color="FFFFFF")
+    header_fill = PatternFill(start_color="0EA5E9", end_color="0EA5E9", fill_type="solid")
+    header_alignment = Alignment(horizontal="center", vertical="center")
+
+    headers = [
+        "Invoice #", "Date", "Type", "Status", 
+        "Supplier Name", "Supplier GSTIN", 
+        "Buyer Name", "Buyer GSTIN",
+        "Taxable Amount", "CGST", "SGST", "IGST", "Total Amount"
+    ]
+    
+    ws.append(headers)
+    for cell in ws[1]:
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = header_alignment
+
+    # Data rows
+    for inv in invoices:
+        ws.append([
+            inv.invoice_number or "N/A",
+            inv.invoice_date or "N/A",
+            inv.invoice_type.value,
+            inv.status.value,
+            inv.supplier_name or "N/A",
+            inv.supplier_gstin or "N/A",
+            inv.buyer_name or "N/A",
+            inv.buyer_gstin or "N/A",
+            inv.taxable_amount or 0,
+            inv.cgst or 0,
+            inv.sgst or 0,
+            inv.igst or 0,
+            inv.total_amount or 0
+        ])
+
+    # Column width adjustment
+    for column in ws.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except:
+                pass
+        adjusted_width = (max_length + 2)
+        ws.column_dimensions[column_letter].width = min(adjusted_width, 50)
+
+    # Save to buffer
+    buffer = io.BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+
+    filename = f"invoices_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+    
+    return StreamingResponse(
+        buffer,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
 
 

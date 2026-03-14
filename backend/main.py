@@ -7,11 +7,14 @@ from app.api.v1.routes import auth, business, invoices, returns, forecast, repor
 from app.db.database import init_db
 import os
 from app.db.database import init_db
+from app.ml.invoice_parser.parser import _get_rapid_ocr
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
     os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
+    # Preload the RapidOCR engine to prevent a long delay on the first invoice upload
+    _get_rapid_ocr()
     yield
 
 

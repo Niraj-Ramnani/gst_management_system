@@ -2,13 +2,14 @@
 Invoice Parser - Hybrid Text + OCR extraction pipeline.
 
 Priority for PDFs & Images:
-  1. Try pdfplumber (text PDF)
-  2. If no text -> RapidOCR (ONNX-based, no PaddlePaddle needed)
+  1. Try PyMuPDF text extraction (text PDF)
+  2. If no text -> Render pages via PyMuPDF + RapidOCR
   3. Parser
 """
 import os
 import re
 import asyncio
+import tempfile
 from typing import Dict, Any, Tuple, Optional
 
 # ── Global cached RapidOCR reader (loaded once) ──────────────────────────────
@@ -81,49 +82,53 @@ def _ocr_with_rapid(image_path: str) -> str:
 
 
 def _extract_text_from_pdf_sync(file_path: str) -> Tuple[str, str]:
-    """Step 1: pdfplumber. Step 2: RapidOCR."""
+    """Step 1: PyMuPDF text extraction. Step 2: PyMuPDF render + RapidOCR."""
     text = ""
     try:
-        import pdfplumber
-        with pdfplumber.open(file_path) as pdf:
-            for page in pdf.pages:
-                page_text = page.extract_text() or ""
-                if page_text.strip():
-                    text = text + page_text + "\n"
-                    
-        if text.strip() and len(text.strip()) >= 50:
-            print(f"[PDF] pdfplumber: {len(text)} chars extracted.")
-            return text, "pdfplumber"
-        else:
-            print(f"[PDF] pdfplumber: only {len(text)} chars — falling back to OCR.")
-    except Exception as e:
-        print(f"[PDF] pdfplumber error: {e}")
+        import fitz  # PyMuPDF
+        doc = fitz.open(file_path)
+        for page in doc:
+            page_text = page.get_text() or ""
+            if page_text.strip():
+                text = text + page_text + "\n"
+        doc.close()
 
-    # OCR fallback for scanned/image PDFs
+        if text.strip() and len(text.strip()) >= 50:
+            print(f"[PDF] PyMuPDF: {len(text)} chars extracted.")
+            return text, "pymupdf"
+        else:
+            print(f"[PDF] PyMuPDF: only {len(text)} chars — falling back to OCR.")
+    except Exception as e:
+        print(f"[PDF] PyMuPDF text error: {e}")
+
+    # OCR fallback — render pages to images via PyMuPDF, then run RapidOCR
     try:
-        from pdf2image import convert_from_path
-        import tempfile
-        print("[PDF] Converting PDF to images for RapidOCR...")
-        # Convert first 2 pages max to keep it fast
-        images = convert_from_path(file_path, dpi=250, first_page=1, last_page=2)
+        import fitz  # PyMuPDF
+        print("[PDF] Rendering PDF pages to images for RapidOCR...")
+        doc = fitz.open(file_path)
         combined = ""
-        for img in images:
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp:
-                img.save(tmp.name, format="PNG")
-                tmp_path = tmp.name
-            
+        # Render first 2 pages max to keep it fast
+        for page_num in range(min(2, len(doc))):
+            page = doc[page_num]
+            # Render at 250 DPI (scale factor = 250/72 ≈ 3.47)
+            mat = fitz.Matrix(250 / 72, 250 / 72)
+            pix = page.get_pixmap(matrix=mat)
+            tmp_path = tempfile.mktemp(suffix=".png")
+            pix.save(tmp_path)
+
             try:
                 t = _ocr_with_rapid(tmp_path)
                 combined = combined + t + "\n"
             finally:
                 if os.path.exists(tmp_path):
                     os.unlink(tmp_path)
-                    
+        doc.close()
+
         if combined.strip():
             print(f"[PDF] RapidOCR: {len(combined)} chars extracted.")
             return combined, "rapidocr"
     except Exception as e:
-        print(f"[PDF] pdf2image/RapidOCR error: {e}")
+        print(f"[PDF] PyMuPDF render/RapidOCR error: {e}")
 
     return "", "none"
 

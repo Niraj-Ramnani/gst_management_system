@@ -1,6 +1,6 @@
 # 🧾 GSTSmart — AI-Powered GST Return Management System
 
-> A production-grade, full-stack SaaS platform for automated GST compliance, invoice parsing, fraud detection, and tax forecasting for Indian small businesses.
+> A production-grade, full-stack SaaS platform for automated GST compliance, invoice parsing, and tax forecasting for Indian small businesses.
 
 ![Dashboard Preview](docs/screenshots/dashboard.png)
 
@@ -11,7 +11,6 @@
 | Feature | Description |
 |---------|-------------|
 | 📄 **AI Invoice Parsing** | Extract invoice fields from PDF/images using OCR + regex pipeline |
-| 🔍 **Fraud Detection** | Isolation Forest + 6 rule-based checks to flag suspicious invoices |
 | 📊 **GST Calculation** | Auto CGST/SGST/IGST split, intra/inter-state detection, ITC calculation |
 | 📈 **Forecasting** | Prophet/ARIMA-based next-month GST liability prediction |
 | 📋 **Return Generation** | One-click GSTR-style monthly summary |
@@ -26,7 +25,7 @@
 **Frontend:** React 18, Vite, Tailwind CSS, Recharts, React Hook Form, React Router  
 **Backend:** FastAPI, Beanie ODM, Pydantic v2, Python 3.11+  
 **Database:** MongoDB 7.0  
-**ML/AI:** Isolation Forest (fraud), Prophet/ARIMA (forecast), EasyOCR/Tesseract (parsing)  
+**ML/AI:** Prophet/ARIMA (forecast), EasyOCR/Tesseract (parsing)  
 **DevOps:** Docker, Docker Compose  
 
 ---
@@ -125,7 +124,6 @@ gst-management-system/
 │       ├── services/         # Business logic layer
 │       ├── ml/
 │       │   ├── invoice_parser/   # OCR + field extraction
-│       │   ├── fraud_detection/  # Isolation Forest model
 │       │   └── forecasting/      # Prophet/ARIMA model
 │       └── core/             # Config, security, deps
 ├── datasets/
@@ -151,12 +149,9 @@ gst-management-system/
 | GET | `/api/v1/invoices` | List with pagination/filter |
 | GET | `/api/v1/invoices/{id}` | Invoice detail |
 | PUT | `/api/v1/invoices/{id}/review` | Review & verify invoice |
-| POST | `/api/v1/invoices/{id}/fraud-check` | Manual fraud check |
 | GET | `/api/v1/returns/monthly-summary` | Monthly GST summary |
 | POST | `/api/v1/returns/generate` | Generate return |
 | GET | `/api/v1/forecast/next-month` | Next month prediction |
-| GET | `/api/v1/fraud/alerts` | Flagged invoices |
-| GET | `/api/v1/fraud/stats` | Fraud statistics |
 | GET | `/api/v1/reports/tax-summary` | Tax summary report |
 
 Full interactive docs at: `http://localhost:8000/docs`
@@ -169,10 +164,6 @@ Full interactive docs at: `http://localhost:8000/docs`
 OCR extracts raw text → Regex rules extract fields → Confidence score assigned  
 **Fallback:** Demo mode generates realistic synthetic data when OCR unavailable
 
-### Fraud Detection (Hybrid)
-6 rule-based checks + Isolation Forest on 6 invoice features  
-**Threshold:** Score ≥ 0.40 marks as fraudulent
-
 ### GST Forecasting
 Prophet time-series on monthly returns → confidence interval  
 **Fallback:** ARIMA → Weighted moving average
@@ -182,11 +173,11 @@ Prophet time-series on monthly returns → confidence interval
 ## 🏆 Why This Project Stands Out in a Hackathon
 
 1. **Real Problem, Real Solution** — Millions of Indian SMBs struggle with GST compliance. This is practical fintech.
-2. **Full-Stack AI Integration** — Not just a demo; real ML models (Isolation Forest, Prophet) are actually running.
+2. **Full-Stack AI Integration** — Not just a demo; real ML models (Prophet) are actually running.
 3. **Production Architecture** — Service layers, JWT auth, RBAC, async background tasks, Docker-ready.
 4. **Graceful Fallbacks** — Every AI model has a fallback, so it demos reliably on any hardware.
 5. **Next-Gen Premium UI** — A high-end dark-theme dashboard with glassmorphism, fluid micro-animations, real-time charts, and a fully mobile-first responsive engine.
-6. **End-to-End Workflow** — Upload → Parse → Review → Fraud Check → Return → Forecast. Full lifecycle.
+6. **End-to-End Workflow** — Upload → Parse → Review → Return → Forecast. Full lifecycle.
 7. **Seed Data Ready** — One script gives judges 6 months of realistic invoices to explore.
 8. **Extensible** — Clean service layer; swap OCR model, add cloud storage, or plug in Donut transformer later.
 
@@ -195,7 +186,7 @@ Prophet time-series on monthly returns → confidence interval
 ## 🔮 Future Improvements
 
 - [ ] Donut/LayoutLM transformer for higher OCR accuracy
-- [ ] WhatsApp/email alerts for fraud notifications
+- [ ] WhatsApp/email alerts for status notifications
 - [ ] CSV/PDF export for all reports
 - [ ] GST portal direct filing integration (GSP API)
 - [ ] Multi-business support per account
