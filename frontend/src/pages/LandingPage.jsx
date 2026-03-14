@@ -81,25 +81,27 @@ export default function LandingPage() {
             <a href="#features" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary-500 transition-all">Engine</a>
             <a href="#compliance" className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary-500 transition-all">Compliance</a>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              className="w-9 h-9 rounded-xl flex items-center justify-center border transition-all duration-300 hover:scale-105 active:scale-95"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center border transition-all duration-300 hover:scale-105 active:scale-95 shrink-0"
               style={{
                 backgroundColor: theme === 'light' ? 'rgba(14,165,233,0.1)' : 'rgba(255,255,255,0.04)',
                 borderColor: theme === 'light' ? 'rgba(14,165,233,0.25)' : 'rgba(255,255,255,0.08)',
               }}
             >
               {theme === 'dark'
-                ? <Moon size={16} className="text-slate-400" />
-                : <Sun size={16} className="text-amber-500" />
+                ? <Moon size={15} className="text-slate-400" />
+                : <Sun size={15} className="text-amber-500" />
               }
             </button>
-            <Link to="/login" className="text-sm font-bold text-slate-400 hover:text-primary-400 transition-colors">Sign In</Link>
-            <Link to="/register" className="btn-primary text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-xl">
-              Get Started
+            {/* Sign In — hidden on very small screens */}
+            <Link to="/login" className="hidden sm:inline text-sm font-bold text-slate-400 hover:text-primary-400 transition-colors">Sign In</Link>
+            <Link to="/register" className="btn-primary text-[10px] sm:text-xs font-bold uppercase tracking-widest px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl whitespace-nowrap">
+              <span className="sm:hidden">Join</span>
+              <span className="hidden sm:inline">Get Started</span>
             </Link>
           </div>
         </div>
@@ -118,9 +120,9 @@ export default function LandingPage() {
           <span>The Future of Indian Business Compliance</span>
         </motion.div>
         
-        <motion.h1 variants={itemVariants} className="font-display font-black text-4xl sm:text-6xl md:text-8xl leading-[1.1] mb-6 sm:mb-8 tracking-[-0.03em]">
+        <motion.h1 variants={itemVariants} className="font-display font-black text-[2rem] sm:text-5xl md:text-7xl lg:text-8xl leading-tight sm:leading-[1.1] mb-6 sm:mb-8 tracking-tight sm:tracking-[-0.03em] break-words">
           Automate GST.<br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-cyan-400 to-primary-500 animate-gradient">Empower Growth.</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-cyan-400 to-primary-500">Empower Growth.</span>
         </motion.h1>
         
         <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed font-medium px-2">
