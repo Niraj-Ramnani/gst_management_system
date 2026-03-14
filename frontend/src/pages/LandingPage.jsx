@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Zap, Shield, TrendingUp, FileText, ArrowRight, CheckCircle, BarChart3, Globe, Sparkles, Cpu, Layers, MousePointer2, Upload, Sun, Moon } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
+import heroVideo from '../assets/JKLU_Video.mp4'
 
 const features = [
   { icon: FileText, title: 'AI Invoice Extraction', desc: 'Enterprise-grade neural networks extract GST fields from raw data with 99.9% precision.', color: 'text-primary-400' },
@@ -144,20 +145,17 @@ export default function LandingPage() {
           className="relative max-w-5xl mx-auto"
         >
           <div className="absolute inset-0 bg-primary-500/20 blur-[100px] -z-10 animate-pulse-slow rounded-full opacity-50" />
-          <div className="card-glass border border-white/10 rounded-[2.5rem] p-4 shadow-2xl overflow-hidden aspect-video relative group">
-             <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent z-10" />
-             <div className="w-full h-full bg-[#0b1120] rounded-[1.8rem] flex items-center justify-center text-slate-700 font-mono text-xs overflow-hidden">
-                <div className="grid grid-cols-12 w-full h-full gap-4 p-8">
-                   {[...Array(24)].map((_, i) => (
-                      <div key={i} className="bg-white/[0.02] border border-white/[0.03] rounded-xl animate-pulse" style={{ animationDelay: `${i * 0.1}s`, height: `${Math.random() * 100 + 50}%` }} />
-                   ))}
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center z-20">
-                    <div className="card-glass p-8 border-white/20 shadow-glow-primary scale-125">
-                       <Zap size={48} className="text-white animate-float" fill="white" />
-                    </div>
-                </div>
-             </div>
+          <div className="card-glass border border-white/10 rounded-[2rem] sm:rounded-[2.5rem] p-2 sm:p-4 shadow-2xl overflow-hidden aspect-video relative group bg-black/40">
+             <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent z-10 pointer-events-none" />
+             <video 
+               autoPlay 
+               loop 
+               muted 
+               playsInline 
+               className="w-full h-full object-cover rounded-[1.5rem] sm:rounded-[1.8rem] opacity-80 group-hover:opacity-100 transition-opacity duration-700"
+             >
+               <source src={heroVideo} type="video/mp4" />
+             </video>
           </div>
         </motion.div>
       </motion.section>
