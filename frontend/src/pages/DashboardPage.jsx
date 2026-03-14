@@ -8,6 +8,7 @@ import StatusBadge from '../components/ui/StatusBadge'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
 import { invoiceService, reportService } from '../services/api'
 import { formatCurrency, formatDate, getMonthName } from '../utils/formatters'
+import clsx from 'clsx'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -39,6 +40,7 @@ export default function DashboardPage() {
   const [invoiceSummary, setInvoiceSummary] = useState(null)
   const [taxSummary, setTaxSummary] = useState(null)
   const [recentInvoices, setRecentInvoices] = useState([])
+  const [chartData, setChartData] = useState([])
   const [profileMissing, setProfileMissing] = useState(false)
 
   useEffect(() => {
