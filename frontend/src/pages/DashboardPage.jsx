@@ -184,7 +184,7 @@ export default function DashboardPage() {
               </div>
            </div>
            <div>
-             <p className="text-5xl font-black text-white font-tabular leading-none">99.8<span className="text-base text-slate-500 ml-0.5">%</span></p>
+             <p className="text-3xl sm:text-4xl font-black text-white font-tabular leading-none">99.8<span className="text-base text-slate-500 ml-0.5">%</span></p>
              <p className="text-[10px] text-slate-500 font-bold mt-2 uppercase tracking-wider">Extraction Accuracy</p>
            </div>
            <div className="mt-4 flex items-center gap-1.5">
