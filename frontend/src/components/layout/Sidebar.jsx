@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -5,6 +6,7 @@ import {
   Settings, Shield, ChevronRight, Zap, X
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import { useTheme } from '../../context/ThemeContext'
 import clsx from 'clsx'
 
 const navItems = [
@@ -17,7 +19,9 @@ const navItems = [
 ]
 
 export default function Sidebar({ isOpen, setIsOpen }) {
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const { user } = useAuth()
+  const { theme } = useTheme()
   
   return (
     <>
@@ -35,89 +39,115 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       </AnimatePresence>
 
       <aside className={clsx(
-        "fixed inset-y-0 left-0 w-[280px] min-w-[280px] shrink-0 bg-[#020617]/95 backdrop-blur-3xl border-r border-white/5 flex flex-col h-screen z-50 transition-transform duration-500 ease-[0.16, 1, 0.3, 1] lg:relative lg:translate-x-0 lg:w-[280px]",
-        isOpen ? "translate-x-0" : "-translate-x-full"
+        "fixed inset-y-0 left-0 shrink-0 flex flex-col h-screen z-50 transition-all duration-300 ease-in-out lg:relative lg:translate-x-0",
+        isCollapsed ? "w-[80px] min-w-[80px]" : "w-[260px] min-w-[260px]",
+        isOpen ? "translate-x-0" : "-translate-x-full",
+        theme === 'light' 
+          ? "bg-white border-r border-[#e2e8f0] shadow-[2px_0_12px_rgba(0,0,0,0.04)]" 
+          : "bg-[#080d1a] border-r border-white/5"
       )}>
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-500/[0.03] to-transparent pointer-events-none" />
-        
-        {/* Logo */}
-        <div className="px-8 py-10 flex items-center justify-between relative">
-          <Link to="/" className="flex items-center gap-4 group">
-            <div className="w-11 h-11 bg-primary-600 rounded-[1.2rem] flex items-center justify-center shadow-[0_8px_30px_rgb(14,165,233,0.3)] group-hover:scale-105 group-hover:rotate-6 transition-all duration-500">
-              <Zap className="w-6 h-6 text-white" fill="white" />
+        {/* Logo Section */}
+        <div className={clsx(
+          "px-6 py-6 flex items-center justify-between relative transition-all duration-300 border-b",
+          theme === 'light' ? "border-slate-100" : "border-white/[0.06]"
+        )}>
+          <Link to="/" className="flex items-center gap-3 group overflow-hidden">
+            <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-[0_8px_30px_rgb(14,165,233,0.3)] group-hover:scale-105 transition-all duration-500 shrink-0">
+              <Zap className="w-5 h-5 text-white" fill="white" />
             </div>
-            <div>
-              <p className="font-display font-black text-white text-2xl tracking-tighter">GST<span className="text-primary-400">Smart</span></p>
-              <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] mt-0.5">Automated Intelligence</p>
-            </div>
+            {!isCollapsed && (
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="whitespace-nowrap"
+              >
+                <p className={`font-display font-black text-xl tracking-tighter ${theme === 'light' ? 'text-[#0f172a]' : 'text-white'}`}>GSTSmart</p>
+                <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] mt-0.5">Automated Intelligence</p>
+              </motion.div>
+            )}
           </Link>
           <button 
             onClick={() => setIsOpen(false)}
-            className="lg:hidden p-2 text-slate-500 hover:text-white transition-colors bg-white/5 rounded-xl"
+            className="lg:hidden p-2 text-slate-500 hover:text-primary-600 transition-colors rounded-xl"
           >
             <X size={20} />
           </button>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto relative custom-scrollbar">
-          <p className="px-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Main Menu</p>
-          {navItems.map(({ to, icon: Icon, label }) => (
-            <NavLink
-              key={to}
-              to={to}
-              className={({ isActive }) => clsx(
-                'flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-[13px] font-bold transition-all duration-300 group relative overflow-hidden',
-                isActive
-                  ? 'text-primary-400 shadow-[0_0_20px_rgba(14,165,233,0.05)]'
-                  : 'text-slate-400 hover:text-slate-100'
-              )}
-            >
-              {({ isActive }) => (
-                <>
-                  {isActive && (
-                    <motion.div 
-                      layoutId="activeNav"
-                      className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-transparent border-l-2 border-primary-500 z-0"
-                      transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-                    />
-                  )}
-                  <Icon className={clsx("relative z-10 transition-all duration-300 group-hover:scale-110", isActive ? "text-primary-400" : "text-slate-500 group-hover:text-slate-200")} size={20} />
-                  <span className="relative z-10">{label}</span>
-                  {isActive && (
-                    <motion.div 
-                      layoutId="activeDot"
-                      className="absolute right-4 w-1.5 h-1.5 bg-primary-400 rounded-full shadow-[0_0_12px_rgba(56,189,248,1)]" 
-                    />
-                  )}
-                </>
-              )}
-            </NavLink>
-          ))}
+        <nav className="flex-1 px-3 py-6 space-y-2 overflow-y-auto relative custom-scrollbar">
+          {!isCollapsed && (
+            <p className="px-4 text-[10px] font-black text-[#94a3b8] uppercase tracking-widest mb-2">Main Menu</p>
+          )}
           
-          {user?.role === 'admin' && (
-            <div className="pt-6 mt-6 border-t border-white/5">
-              <p className="px-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Administration</p>
+          <div className="space-y-1">
+            {navItems.map(({ to, icon: Icon, label }) => (
               <NavLink
-                to="/admin"
+                key={to}
+                to={to}
                 className={({ isActive }) => clsx(
-                  'flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-[13px] font-bold transition-all duration-300 group relative overflow-hidden',
+                  'flex items-center gap-3 px-4 py-3 rounded-[10px] text-[13px] font-bold transition-all duration-200 group relative overflow-hidden',
                   isActive
-                    ? 'text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.05)]'
-                    : 'text-slate-400 hover:text-amber-200'
+                    ? (theme === 'light' 
+                        ? 'text-[#2563eb] bg-gradient-to-r from-[#eff6ff] to-[#dbeafe] border-l-[3px] border-[#2563eb]' 
+                        : 'text-[#00b4f5] bg-[#00b4f5]/10 border-l-[3px] border-[#00b4f5]')
+                    : (theme === 'light' 
+                        ? 'text-[#64748b] hover:text-[#374151] hover:bg-[#f1f5f9] hover:translate-x-1' 
+                        : 'text-[#64748b] hover:text-[#e2e8f0] hover:bg-white/5 hover:translate-x-1')
                 )}
               >
                 {({ isActive }) => (
                   <>
-                    {isActive && (
-                      <motion.div 
-                        layoutId="activeNav"
-                        className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-transparent border-l-2 border-amber-500 z-0"
-                        transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-                      />
+                    <Icon className={clsx(
+                      "shrink-0 transition-all duration-300",
+                      isActive 
+                        ? (theme === 'light' ? "text-[#2563eb]" : "text-[#00b4f5]") 
+                        : (theme === 'light' ? "text-[#64748b] group-hover:text-[#374151]" : "text-[#64748b] group-hover:text-[#e2e8f0]")
+                    )} size={18} />
+                    {!isCollapsed && (
+                      <motion.span 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="truncate"
+                      >
+                        {label}
+                      </motion.span>
                     )}
-                    <Shield className={clsx("relative z-10 transition-all duration-300 group-hover:scale-110", isActive ? "text-amber-400" : "text-slate-500 group-hover:text-amber-200")} size={20} />
-                    <span className="relative z-10">Admin Portal</span>
+                  </>
+                )}
+              </NavLink>
+            ))}
+          </div>
+
+          {user?.role === 'admin' && (
+            <div className="pt-4 mt-4 border-t border-white/5">
+              {!isCollapsed && (
+                <p className="px-4 text-[10px] font-black text-[#94a3b8] uppercase tracking-widest mb-2">Administration</p>
+              )}
+              <NavLink
+                to="/admin"
+                className={({ isActive }) => clsx(
+                  'flex items-center gap-3 px-4 py-3 rounded-[10px] text-[13px] font-bold transition-all duration-200 group relative overflow-hidden',
+                  isActive
+                    ? 'text-amber-500 bg-amber-500/10 border-l-[3px] border-amber-500'
+                    : 'text-[#64748b] hover:text-amber-200 hover:bg-white/5 hover:translate-x-1'
+                )}
+              >
+                {({ isActive }) => (
+                  <>
+                    <Shield className={clsx(
+                      "shrink-0 transition-all duration-300",
+                      isActive ? "text-amber-500" : "text-[#64748b] group-hover:text-amber-200"
+                    )} size={18} />
+                    {!isCollapsed && (
+                      <motion.span 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="truncate"
+                      >
+                        Admin Portal
+                      </motion.span>
+                    )}
                   </>
                 )}
               </NavLink>
@@ -125,17 +155,43 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           )}
         </nav>
 
-        {/* User footer */}
-        <div className="px-6 py-8 border-t border-white/5 bg-slate-900/40 backdrop-blur-xl">
-          <div className="flex items-center gap-4 p-3 rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] transition-all group cursor-pointer border border-white/5 hover:border-white/10">
-            <div className="w-12 h-12 bg-gradient-to-br from-slate-800 to-slate-950 rounded-xl flex items-center justify-center border border-white/10 group-hover:border-primary-500/30 transition-all shadow-inner">
-              <span className="text-base font-black text-white">{user?.name?.[0]?.toUpperCase()}</span>
+        {/* Bottom Section */}
+        <div className="mt-auto px-3 py-4 space-y-4">
+          {/* Collapse Toggle */}
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className={clsx(
+              "w-full flex items-center justify-center p-2.5 rounded-xl transition-all duration-200",
+              theme === 'light' ? "hover:bg-slate-100 text-slate-400" : "hover:bg-white/5 text-slate-500"
+            )}
+          >
+            {isCollapsed ? <ChevronRight size={18} /> : <Zap size={18} className="rotate-180" />}
+          </button>
+
+          {/* User footer */}
+          <div className={clsx(
+            "p-2 rounded-[12px] transition-all duration-200 group cursor-pointer border",
+            theme === 'light' 
+              ? "bg-white border-[#e2e8f0] shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:bg-slate-50" 
+              : "bg-[#0d1424] border-[#00b4f5]/15 hover:bg-[#0d1424]/80"
+          )}>
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 shrink-0 bg-gradient-to-br from-[#2563eb] to-[#00b4f5] rounded-full flex items-center justify-center border border-white/20 shadow-inner">
+                <span className="text-sm font-bold text-white uppercase">{user?.name?.[0]}{user?.name?.split(' ')?.[1]?.[0]}</span>
+              </div>
+              {!isCollapsed && (
+                <>
+                  <div className="flex-1 min-w-0">
+                    <p className={clsx(
+                      "text-sm font-bold truncate transition-colors",
+                      theme === 'light' ? "text-[#0f172a]" : "text-slate-100 group-hover:text-white"
+                    )}>{user?.name}</p>
+                    <p className="text-[10px] font-black text-[#94a3b8] truncate uppercase tracking-wide mt-0.5">{user?.role?.replace('_', ' ')}</p>
+                  </div>
+                  <ChevronRight size={16} className="text-slate-400 shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                </>
+              )}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-slate-100 truncate group-hover:text-white transition-colors">{user?.name}</p>
-              <p className="text-[10px] font-black text-slate-500 truncate uppercase tracking-[0.15em] mt-0.5">{user?.role?.replace('_', ' ')}</p>
-            </div>
-            <ChevronRight size={16} className="text-slate-600 group-hover:text-slate-300 group-hover:translate-x-1 transition-all" />
           </div>
         </div>
       </aside>

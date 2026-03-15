@@ -286,8 +286,8 @@
 [data-theme="light"] .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1 !important; }
 
 /* Nav items in sidebar */
-[data-theme="light"] nav a { color: #475569 !important; }
-[data-theme="light"] nav a:hover { color: #0f172a !important; }
+[data-theme="light"] aside nav a { color: #475569 !important; }
+[data-theme="light"] aside nav a:hover { color: #0f172a !important; }
 
 /* Dividers */
 [data-theme="light"] .divide-y > * { border-color: #e2e8f0 !important; }

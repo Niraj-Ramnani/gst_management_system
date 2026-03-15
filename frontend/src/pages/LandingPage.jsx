@@ -73,15 +73,24 @@ export default function LandingPage() {
           </div>
 
           <div className="hidden md:flex items-center gap-12">
-            {['PROCESS', 'ENGINE', 'COMPLIANCE'].map((link) => (
+            {[
+              { label: 'PROCESS', id: 'workflow' },
+              { label: 'ENGINE', id: 'features' },
+              { label: 'PRICING', id: 'pricing' },
+              { label: 'COMPLIANCE', id: 'cta' }
+            ].map(({ label, id }) => (
               <a 
-                key={link}
-                href={`#${link.toLowerCase()}`} 
+                key={label}
+                href={`#${id}`} 
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+                }}
                 className={`text-[12px] font-black uppercase tracking-[0.25em] transition-colors ${
                   theme === 'light' ? 'text-[#374151] hover:text-[#2563eb]' : 'text-[#94a3b8] hover:text-[#00b4f5]'
                 }`}
               >
-                {link}
+                {label}
               </a>
             ))}
           </div>
@@ -650,6 +659,7 @@ export default function LandingPage() {
 
       {/* 4. CTA Section */}
       <section 
+        id="cta"
         className="w-full py-20 sm:py-32 relative z-10 transition-colors duration-500 overflow-hidden"
         style={{ 
           background: theme === 'light' 
