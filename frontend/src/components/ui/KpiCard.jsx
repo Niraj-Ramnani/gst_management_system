@@ -9,23 +9,23 @@ export default function KpiCard({ title, value, subtitle, icon: Icon, color = 'p
   const colorMap = {
     primary: {
         bottomBorder: isLight ? '#2563eb' : '#3b82f6',
-        iconBg: 'rgba(37,99,235,0.12)',
+        iconBg: isLight ? '#eff6ff' : 'rgba(37,99,235,0.12)',
         iconColor: isLight ? '#2563eb' : '#3b82f6',
     },
     success: {
         bottomBorder: isLight ? '#16a34a' : '#22c55e',
-        iconBg: 'rgba(34,197,94,0.12)',
+        iconBg: isLight ? '#f0fdf4' : 'rgba(34,197,94,0.12)',
         iconColor: isLight ? '#16a34a' : '#22c55e',
     },
     purple: {
         bottomBorder: isLight ? '#7c3aed' : '#8b5cf6',
-        iconBg: 'rgba(139,92,246,0.12)',
+        iconBg: isLight ? '#f5f3ff' : 'rgba(139,92,246,0.12)',
         iconColor: isLight ? '#7c3aed' : '#8b5cf6',
     },
     cyan: {
-        bottomBorder: '#00b4f5',
-        iconBg: 'rgba(0,180,245,0.12)',
-        iconColor: '#00b4f5',
+        bottomBorder: isLight ? '#0891b2' : '#00b4f5',
+        iconBg: isLight ? '#ecfeff' : 'rgba(0,180,245,0.12)',
+        iconColor: isLight ? '#0891b2' : '#00b4f5',
     }
   }
 

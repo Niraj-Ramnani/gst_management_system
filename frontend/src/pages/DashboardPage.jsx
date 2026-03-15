@@ -24,16 +24,25 @@ const itemVariants = {
   visible: { y: 0, opacity: 1, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
 }
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, theme }) => {
   if (!active || !payload?.length) return null
+  const isLight = theme === 'light'
   return (
-    <div className="bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-4 shadow-2xl">
-      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">{label}</p>
+    <div 
+      className={clsx(
+        "backdrop-blur-xl border rounded-2xl px-5 py-4 shadow-2xl transition-colors duration-300",
+        isLight ? "bg-white/90 border-[#e2e8f0]" : "bg-slate-900/90 border-white/10"
+      )}
+    >
+      <p className={clsx(
+        "text-[10px] font-black uppercase tracking-widest mb-3",
+        isLight ? "text-slate-500" : "text-slate-500"
+      )}>{label}</p>
       {payload.map(p => (
         <div key={p.name} className="flex items-center gap-2.5 mb-1.5">
           <div className="w-2 h-2 rounded-full" style={{ background: p.color }} />
-          <span className="text-xs text-slate-400">{p.name}:</span>
-          <span className="text-xs font-bold text-white ml-auto">{formatCurrency(p.value)}</span>
+          <span className={clsx("text-xs", isLight ? "text-slate-600" : "text-slate-400")}>{p.name}:</span>
+          <span className={clsx("text-xs font-bold ml-auto", isLight ? "text-[#0f172a]" : "text-white")}>{formatCurrency(p.value)}</span>
         </div>
       ))}
     </div>
@@ -119,7 +128,12 @@ export default function DashboardPage() {
       {profileMissing && (
         <motion.div 
           variants={itemVariants}
-          className="bg-gradient-to-r from-primary-600 to-indigo-600 rounded-2xl p-6 sm:p-8 shadow-xl shadow-primary-900/20 relative overflow-hidden flex flex-col sm:flex-row items-center gap-6"
+          className={clsx(
+            "rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden flex flex-col sm:flex-row items-center gap-6 transition-all duration-300",
+            theme === 'light' 
+              ? "bg-gradient-to-r from-[#2563eb] to-[#3b82f6] shadow-blue-500/10" 
+              : "bg-gradient-to-r from-primary-600 to-indigo-600 shadow-primary-900/20"
+          )}
         >
           <div className="absolute right-0 top-0 w-64 h-64 bg-white/10 blur-3xl -mr-20 -mt-20 opacity-50" />
           <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center border border-white/30 shrink-0">
@@ -129,7 +143,7 @@ export default function DashboardPage() {
              <h2 className="text-xl font-black text-white uppercase tracking-tight">Complete Your Setup</h2>
              <p className="text-white/80 text-sm">Please create your business profile and GSTIN details to enable invoice scanning and tax analytics.</p>
           </div>
-          <Link to="/profile" className="btn-secondary !bg-white !text-primary-600 px-8 py-3 font-black text-xs uppercase tracking-widest relative z-10 shrink-0">
+          <Link to="/profile" className="btn-secondary !bg-white !text-blue-600 px-8 py-3 font-black text-xs uppercase tracking-widest relative z-10 shrink-0 hover:scale-105 transition-transform">
              Setup Profile
           </Link>
         </motion.div>
@@ -228,9 +242,21 @@ export default function DashboardPage() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke={theme === 'light' ? '#e2e8f0' : '#1e293b'} vertical={false} />
-                  <XAxis dataKey="name" stroke={theme === 'light' ? '#94a3b8' : '#475569'} tick={{ fill: theme === 'light' ? '#64748b' : '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <YAxis stroke={theme === 'light' ? '#94a3b8' : '#475569'} tick={{ fill: theme === 'light' ? '#64748b' : '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} />
-                  <Tooltip content={<CustomTooltip />} />
+                  <XAxis 
+                    dataKey="name" 
+                    stroke={theme === 'light' ? '#94a3b8' : '#475569'} 
+                    tick={{ fill: theme === 'light' ? '#64748b' : '#64748b', fontSize: 10 }} 
+                    axisLine={false} 
+                    tickLine={false} 
+                  />
+                  <YAxis 
+                    stroke={theme === 'light' ? '#94a3b8' : '#475569'} 
+                    tick={{ fill: theme === 'light' ? '#64748b' : '#64748b', fontSize: 10 }} 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} 
+                  />
+                  <Tooltip content={<CustomTooltip theme={theme} />} />
                   <Area type="monotone" dataKey="Sales Tax" stroke="#0ea5e9" fill="url(#salesGrad)" strokeWidth={3} animationDuration={1500} />
                   <Area type="monotone" dataKey="Net Payable" stroke="#22c55e" fill="url(#netGrad)" strokeWidth={3} animationDuration={1500} />
                 </AreaChart>
@@ -289,19 +315,33 @@ export default function DashboardPage() {
           </motion.div>
 
           {/* New Quick Stats Card */}
-          <motion.div variants={itemVariants} className="card p-6 bg-gradient-to-br from-indigo-900/20 to-transparent border border-indigo-500/10">
+          <motion.div 
+            variants={itemVariants} 
+            className={clsx(
+              "card p-6 border transition-all duration-300",
+              theme === 'light' 
+                ? "bg-gradient-to-br from-indigo-50 to-white border-indigo-100" 
+                : "bg-gradient-to-br from-indigo-900/20 to-transparent border-indigo-500/10"
+            )}
+          >
              <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
-                   <Clock size={16} className="text-indigo-400" />
+                <div className={clsx(
+                  "w-8 h-8 rounded-lg flex items-center justify-center",
+                  theme === 'light' ? "bg-indigo-100" : "bg-indigo-500/10"
+                )}>
+                   <Clock size={16} className={theme === 'light' ? "text-indigo-600" : "text-indigo-400"} />
                 </div>
-                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-300">Quick Reminders</h4>
+                <h4 className={clsx(
+                  "text-[10px] font-black uppercase tracking-[0.2em]",
+                  theme === 'light' ? "text-indigo-600" : "text-indigo-300"
+                )}>Quick Reminders</h4>
              </div>
              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-[11px] text-slate-400">
+                <div className={clsx("flex items-center gap-3 text-[11px]", theme === 'light' ? "text-[#475569]" : "text-slate-400")}>
                    <div className="w-1 h-1 rounded-full bg-indigo-500" />
                    GSTR-1 Filing due in 3 days
                 </div>
-                <div className="flex items-center gap-3 text-[11px] text-slate-400">
+                <div className={clsx("flex items-center gap-3 text-[11px]", theme === 'light' ? "text-[#475569]" : "text-slate-400")}>
                    <div className="w-1 h-1 rounded-full bg-indigo-500" />
                    {invoiceSummary?.by_status?.parsed || 0} Invoices pending verification
                 </div>
@@ -336,24 +376,41 @@ export default function DashboardPage() {
               </Link>
             </div>
           </div>
-          <div className="divide-y divide-slate-800/20 max-h-[400px] overflow-y-auto custom-scrollbar">
+          <div className={clsx(
+            "divide-y max-h-[400px] overflow-y-auto custom-scrollbar",
+            theme === 'light' ? "divide-[#f1f5f9]" : "divide-slate-800/20"
+          )}>
             {recentInvoices.length === 0 ? (
               <div className="px-5 py-16 text-center text-slate-500 italic flex flex-col items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center">
-                  <FileText size={24} className="text-slate-700" />
+                <div className={clsx(
+                  "w-14 h-14 rounded-2xl border flex items-center justify-center",
+                  theme === 'light' ? "bg-slate-50 border-[#e2e8f0]" : "bg-white/[0.02] border border-white/5"
+                )}>
+                  <FileText size={24} className={theme === 'light' ? "text-slate-300" : "text-slate-700"} />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-400 mb-1">No recent activity</p>
+                  <p className={clsx("text-sm font-bold mb-1", theme === 'light' ? "text-slate-400" : "text-slate-400")}>No recent activity</p>
                   <Link to="/upload" className="text-primary-400 text-xs font-bold hover:text-primary-300">Upload your first invoice →</Link>
                 </div>
               </div>
             ) : recentInvoices.map(inv => (
-              <Link key={inv.id} to={`/invoices/${inv.id}`} className="flex items-center gap-4 px-6 py-4 hover:bg-primary-500/[0.03] border-l-2 border-l-transparent hover:border-l-primary-500/50 transition-all duration-200 group">
-                <div className="w-10 h-10 bg-primary-950/40 rounded-xl flex items-center justify-center shrink-0 border border-primary-500/10 group-hover:scale-105 group-hover:border-primary-500/30 transition-all">
-                  <FileText size={18} className="text-primary-400" />
+              <Link key={inv.id} to={`/invoices/${inv.id}`} className={clsx(
+                "flex items-center gap-4 px-6 py-4 transition-all duration-200 group border-l-2 border-l-transparent",
+                theme === 'light' ? "hover:bg-blue-50/50 hover:border-l-blue-500" : "hover:bg-primary-500/[0.03] hover:border-l-primary-500/50"
+              )}>
+                <div className={clsx(
+                  "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border transition-all",
+                  theme === 'light' 
+                    ? "bg-blue-50 border-blue-100 group-hover:border-blue-300" 
+                    : "bg-primary-950/40 border-primary-500/10 group-hover:border-primary-500/30"
+                )}>
+                  <FileText size={18} className={theme === 'light' ? "text-blue-600" : "text-primary-400"} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-bold truncate mb-0.5 ${theme === 'light' ? 'text-[#0f172a]' : 'text-slate-100'}`}>
+                  <p className={clsx(
+                    "text-sm font-bold truncate mb-0.5 transition-colors",
+                    theme === 'light' ? 'text-[#0f172a] group-hover:text-[#2563eb]' : 'text-slate-100 group-hover:text-primary-400'
+                  )}>
                     {inv.supplier_name || inv.original_filename}
                   </p>
                   <div className={`flex items-center gap-2 text-[10px] font-medium ${theme === 'light' ? 'text-[#64748b]' : 'text-slate-500'}`}>
@@ -364,7 +421,9 @@ export default function DashboardPage() {
                 </div>
                 <div className="text-right shrink-0">
                   <p className={`text-sm font-black mb-1.5 ${theme === 'light' ? 'text-[#0f172a]' : 'text-white'}`}>{formatCurrency(inv.total_amount)}</p>
-                  <StatusBadge status={inv.status} />
+                  <div className="scale-90 origin-right">
+                    <StatusBadge status={inv.status} />
+                  </div>
                 </div>
               </Link>
             ))}

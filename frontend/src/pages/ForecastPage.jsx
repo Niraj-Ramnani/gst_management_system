@@ -133,13 +133,28 @@ export default function ForecastPage() {
   ]
 
   return (
-    <div className="space-y-8 animate-fade-in relative min-h-[calc(100vh-200px)]">
-      <div className="page-header">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in relative min-h-[calc(100vh-200px)]">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="font-display font-bold text-2xl text-white">GST Forecast</h1>
-          <p className="text-slate-400 text-sm mt-0.5">AI-powered liability prediction using Prophet time-series model</p>
+          <h1 className={clsx(
+            "text-2xl sm:text-3xl font-black tracking-tight transition-colors",
+            theme === 'light' ? 'text-[#0f172a]' : 'text-white'
+          )}>GST Forecast</h1>
+          <p className={clsx(
+            "text-xs sm:text-sm mt-1 font-medium transition-colors",
+            theme === 'light' ? 'text-[#475569]' : 'text-slate-400'
+          )}>AI-powered liability prediction using Prophet time-series model</p>
         </div>
-        <button onClick={handleTrain} disabled={training} className="btn-secondary flex items-center gap-2">
+        <button 
+          onClick={handleTrain} 
+          disabled={training} 
+          className={clsx(
+            "h-[48px] px-6 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 shadow-sm border shrink-0 w-full sm:w-auto",
+            theme === 'light' 
+              ? "bg-white border-[#e2e8f0] text-[#374151] hover:bg-[#f8fafc]" 
+              : "bg-white/5 border-white/10 text-white hover:bg-white/10"
+          )}
+        >
           <RefreshCw size={16} className={training ? 'animate-spin' : ''} />
           {training ? 'Training…' : 'Retrain Model'}
         </button>
@@ -156,42 +171,80 @@ export default function ForecastPage() {
       ) : (
         <>
           {/* Prediction Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="card p-6 md:col-span-1">
-              <div className="flex items-start justify-between mb-4">
-                <div className="p-2.5 bg-primary-900/30 rounded-xl">
-                  <Zap size={20} className="text-primary-400" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div 
+              className={clsx(
+                "p-6 sm:p-8 rounded-[24px] md:col-span-1 border transition-all duration-300",
+                theme === 'light' ? "bg-white border-[#e2e8f0] shadow-sm" : "bg-[#0d1424] border-[rgba(0,180,245,0.15)]"
+              )}
+            >
+              <div className="flex items-start justify-between mb-6">
+                <div className={clsx(
+                  "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors",
+                  theme === 'light' ? "bg-blue-50" : "bg-primary-900/30"
+                )}>
+                  <Zap size={24} className={theme === 'light' ? "text-blue-600" : "text-primary-400"} />
                 </div>
-                <TrendIcon size={18} className={trendColor} />
+                <div className={clsx("flex items-center gap-1.5 px-3 py-1.5 rounded-full", theme === 'light' ? "bg-slate-50" : "bg-white/5")}>
+                   <TrendIcon size={16} className={trendColor} />
+                </div>
               </div>
-              <p className="text-3xl font-display font-bold text-white mb-1">{formatCurrency(data?.predicted_liability)}</p>
-              <p className="text-sm text-slate-400">Predicted GST for {getMonthName(data?.month)} {data?.year}</p>
-              <div className="mt-4 pt-4 border-t border-slate-800 space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Lower bound</span>
-                  <span className="text-slate-300 font-mono">{formatCurrency(data?.lower_bound)}</span>
+              <p className={clsx(
+                "text-3xl sm:text-4xl font-black font-display mb-1 transition-colors",
+                theme === 'light' ? "text-[#0f172a]" : "text-white"
+              )}>
+                {formatCurrency(data?.predicted_liability)}
+              </p>
+              <p className={clsx("text-xs font-bold uppercase tracking-widest", theme === 'light' ? "text-slate-500" : "text-slate-400")}>
+                Predicted GST for {getMonthName(data?.month)} {data?.year}
+              </p>
+              <div className={clsx(
+                "mt-6 pt-6 border-t space-y-3 text-sm font-medium",
+                theme === 'light' ? "border-[#f1f5f9]" : "border-slate-800"
+              )}>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-500 text-xs uppercase tracking-widest">Low Est.</span>
+                  <span className={clsx("font-tabular font-bold", theme === 'light' ? "text-[#334155]" : "text-slate-300")}>{formatCurrency(data?.lower_bound)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Upper bound</span>
-                  <span className="text-slate-300 font-mono">{formatCurrency(data?.upper_bound)}</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-500 text-xs uppercase tracking-widest">High Est.</span>
+                  <span className={clsx("font-tabular font-bold", theme === 'light' ? "text-[#334155]" : "text-slate-300")}>{formatCurrency(data?.upper_bound)}</span>
                 </div>
               </div>
             </div>
 
-            <div className="card p-6 md:col-span-2 flex flex-col">
-              <div className="flex items-center gap-2 mb-3">
-                <Info size={14} className="text-primary-400" />
-                <p className="text-sm font-semibold text-white">AI Insight</p>
+            <div 
+              className={clsx(
+                "p-8 rounded-[24px] md:col-span-2 flex flex-col border transition-all duration-300",
+                theme === 'light' ? "bg-white border-[#e2e8f0] shadow-sm" : "bg-[#0d1424] border-[rgba(0,180,245,0.15)]"
+              )}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className={clsx(
+                  "w-8 h-8 rounded-lg flex items-center justify-center",
+                  theme === 'light' ? "bg-amber-50" : "bg-primary-900/20"
+                )}>
+                  <Info size={16} className={theme === 'light' ? "text-amber-600" : "text-primary-400"} />
+                </div>
+                <p className={clsx("text-xs font-black uppercase tracking-widest", theme === 'light' ? "text-slate-900" : "text-white")}>AI Insight Engine</p>
               </div>
-              <p className="text-sm text-slate-300 leading-relaxed flex-1">{data?.explanation}</p>
-              <div className="mt-4 pt-4 border-t border-slate-800">
-                <div className="flex items-center gap-2">
-                  <div className={`flex items-center gap-1.5 text-sm font-medium ${trendColor}`}>
+              <p className={clsx(
+                "text-sm sm:text-base leading-relaxed flex-1 font-medium",
+                theme === 'light' ? "text-[#475569]" : "text-slate-300"
+              )}>
+                {data?.explanation}
+              </p>
+              <div className={clsx(
+                "mt-6 pt-6 border-t transition-all",
+                theme === 'light' ? "border-[#f1f5f9]" : "border-slate-800"
+              )}>
+                <div className="flex flex-wrap items-center gap-4">
+                  <div className={clsx("flex items-center gap-2 text-xs font-black uppercase tracking-widest", trendColor)}>
                     <TrendIcon size={14} />
-                    Trend: <span className="capitalize">{data?.trend}</span>
+                    <span>Trend: {data?.trend}</span>
                   </div>
-                  <span className="text-slate-600">·</span>
-                  <span className="text-slate-400 text-sm">Model: Prophet</span>
+                  <span className="text-slate-300 hidden sm:inline">•</span>
+                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Model: Prophet v1.0</span>
                 </div>
               </div>
             </div>
@@ -199,39 +252,74 @@ export default function ForecastPage() {
 
           {/* Chart */}
           {chartData.length > 0 && (
-            <div className="card p-6">
-              <h3 className="section-title mb-6">Historical vs Predicted GST Liability</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <AreaChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="actualGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="predGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                  <XAxis dataKey="date" stroke="#475569" tick={{ fill: '#64748b', fontSize: 11 }} />
-                  <YAxis stroke="#475569" tick={{ fill: '#64748b', fontSize: 11 }} tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} />
-                  <Tooltip
-                    contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '12px', fontSize: '12px' }}
-                    formatter={v => formatCurrency(v)}
-                  />
-                  <Area type="monotone" dataKey="actual" stroke="#0ea5e9" fill="url(#actualGrad)" strokeWidth={2} name="Actual" connectNulls />
-                  <Area type="monotone" dataKey="predicted" stroke="#f59e0b" fill="url(#predGrad)" strokeWidth={2} strokeDasharray="5 5" name="Predicted" connectNulls />
-                </AreaChart>
-              </ResponsiveContainer>
-              <div className="flex gap-6 mt-4 justify-center">
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="w-8 h-0.5 bg-primary-500 rounded" />
-                  <span className="text-slate-400">Historical</span>
+            <div 
+              className={clsx(
+                "p-6 sm:p-8 rounded-[24px] border transition-all duration-300",
+                theme === 'light' ? "bg-white border-[#e2e8f0] shadow-sm" : "bg-[#0d1424] border-[rgba(0,180,245,0.15)]"
+              )}
+            >
+              <h3 className={clsx(
+                "text-xl font-black tracking-tight mb-8 transition-colors",
+                theme === 'light' ? "text-[#0f172a]" : "text-white"
+              )}>Historical vs Predicted GST Liability</h3>
+              <div className="h-[350px] sm:h-[400px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="actualGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4} />
+                        <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
+                      </linearGradient>
+                      <linearGradient id="predGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4} />
+                        <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke={theme === 'light' ? '#e2e8f0' : '#1e293b'} vertical={false} />
+                    <XAxis 
+                      dataKey="date" 
+                      stroke={theme === 'light' ? '#94a3b8' : '#475569'} 
+                      tick={{ fill: theme === 'light' ? '#64748b' : '#64748b', fontSize: 10 }} 
+                      axisLine={false} 
+                      tickLine={false} 
+                    />
+                    <YAxis 
+                      stroke={theme === 'light' ? '#94a3b8' : '#475569'} 
+                      tick={{ fill: theme === 'light' ? '#64748b' : '#64748b', fontSize: 10 }} 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} 
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => (
+                        <div className={clsx(
+                          "backdrop-blur-xl border rounded-2xl px-5 py-4 shadow-2xl transition-colors duration-300",
+                          theme === 'light' ? "bg-white/90 border-[#e2e8f0]" : "bg-slate-900/90 border-white/10"
+                        )}>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">{label}</p>
+                          {payload?.map(p => (
+                            <div key={p.name} className="flex items-center gap-2.5 mb-1">
+                              <div className="w-2 h-2 rounded-full" style={{ background: p.stroke }} />
+                              <span className={clsx("text-xs", theme === 'light' ? "text-slate-600" : "text-slate-400")}>{p.name}:</span>
+                              <span className={clsx("text-xs font-bold ml-auto", theme === 'light' ? "text-[#0f172a]" : "text-white")}>{formatCurrency(p.value)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    />
+                    <Area type="monotone" dataKey="actual" stroke="#0ea5e9" fill="url(#actualGrad)" strokeWidth={3} name="Actual" connectNulls animationDuration={1500} />
+                    <Area type="monotone" dataKey="predicted" stroke="#f59e0b" fill="url(#predGrad)" strokeWidth={3} strokeDasharray="5 5" name="Predicted" connectNulls animationDuration={1500} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="flex flex-wrap gap-6 mt-6 justify-center">
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
+                  <div className="w-8 h-1 bg-[#0ea5e9] rounded-full" />
+                  <span className="text-slate-500">Historical Data</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="w-8 h-0.5 bg-warning-500 rounded border-dashed border-t border-warning-500" />
-                  <span className="text-slate-400">Forecast</span>
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
+                  <div className="w-8 h-1 bg-[#f59e0b] rounded-full border-dashed border-t-2" />
+                  <span className="text-slate-500">Predicted Forecast</span>
                 </div>
               </div>
             </div>
