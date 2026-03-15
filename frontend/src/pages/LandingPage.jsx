@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Zap, Shield, TrendingUp, FileText, ArrowRight, CheckCircle, BarChart3, Globe, Sparkles, Cpu, Layers, MousePointer2, Upload, Sun, Moon, Star, Menu } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 import heroBg from '../assets/hero-bg.png'
+import promoVideo from '../assets/JKLU_Video.mp4'
 
 const features = [
   { icon: FileText, title: 'AI Invoice Extraction', desc: 'Enterprise-grade neural networks extract GST fields from raw data with 99.9% precision.', color: 'text-primary-400' },
@@ -182,9 +183,9 @@ export default function LandingPage() {
       >
         <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-12 md:gap-0">
           {[
-            { value: "1.4 Crore+", label: "GST Businesses in India" },
+            { value: "3X Faster", label: "THAN MANUAL GST FILING" },
             { value: "99.8%", label: "Extraction Accuracy" },
-            { value: "60 Seconds", label: "Average Filing Time" }
+            { value: "10s", label: "Average Filing Time" }
           ].map((stat, idx) => (
             <div key={idx} className="flex-1 flex text-center justify-center items-center group w-full relative">
               <div className="flex flex-col items-center">
@@ -279,20 +280,38 @@ export default function LandingPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {[
-              { icon: Zap, title: "AI Invoice Parsing", desc: "Instantly digitize and validate thousands of unstructured invoices with 99.8% precision." },
-              { icon: Shield, title: "Fraud Detection", desc: "Identify ghost invoices, duplicate claims, and suspicious GSTINs before they enter your ledger." },
-              { icon: TrendingUp, title: "GST Forecasting", desc: "Predict cash flow impacts and optimize working capital with our predictive tax liability models." }
-            ].map(({ icon: Icon, title, desc }) => (
+              { 
+                icon: Zap, 
+                badge: "AI POWERED",
+                title: "AI Invoice Parsing", 
+                desc: "Instantly digitize and validate thousands of unstructured invoices with 99.8% precision.",
+                highlights: ["Upload PDF CSV or Manual", "Auto GSTIN extraction", "99.8% accuracy"]
+              },
+              { 
+                icon: Shield, 
+                badge: "ML DETECTION",
+                title: "Fraud Detection", 
+                desc: "Identify ghost invoices, duplicate claims, and suspicious GSTINs before they enter your ledger.",
+                highlights: ["Duplicate invoice detection", "Abnormal amount flagging", "Pre-filing fraud alerts"]
+              },
+              { 
+                icon: TrendingUp, 
+                badge: "PREDICTIVE",
+                title: "GST Forecasting", 
+                desc: "Predict cash flow impacts and optimize working capital with our predictive tax liability models.",
+                highlights: ["12 month trend analysis", "Next 3 months prediction", "Cash flow planning"]
+              }
+            ].map(({ icon: Icon, badge, title, desc, highlights }) => (
               <motion.div 
                 key={title} 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="group relative p-12 rounded-[16px] transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+                className="group relative p-12 rounded-[16px] transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col items-start min-h-[320px]"
                 style={{ 
-                  backgroundColor: '#0d1424', 
-                  border: '1px solid rgba(0,180,245,0.25)',
+                  backgroundColor: theme === 'light' ? '#ffffff' : '#0d1424', 
+                  border: theme === 'light' ? '1px solid rgba(0,180,245,0.2)' : '1px solid rgba(0,180,245,0.25)',
                   boxShadow: '0 -2px 20px rgba(0,180,245,0.08) inset'
                 }}
                 onMouseEnter={(e) => {
@@ -300,29 +319,61 @@ export default function LandingPage() {
                   e.currentTarget.style.filter = 'brightness(1.1)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(0,180,245,0.25)';
+                  e.currentTarget.style.borderColor = theme === 'light' ? 'rgba(0,180,245,0.2)' : 'rgba(0,180,245,0.25)';
                   e.currentTarget.style.filter = 'brightness(1)';
                 }}
               >
                 {/* Top Accent Line */}
                 <div className="absolute top-0 left-0 w-full h-[3px] bg-[#00b4f5] opacity-30 transition-opacity duration-300 group-hover:opacity-100" />
                 
+                {/* Feature Badge */}
+                <div className="mb-6 px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider"
+                  style={{
+                    backgroundColor: theme === 'light' ? 'rgba(0,180,245,0.06)' : 'rgba(0,180,245,0.1)',
+                    borderColor: 'rgba(0,180,245,0.3)',
+                    color: '#00b4f5'
+                  }}
+                >
+                  {badge}
+                </div>
+
                 {/* Icon Container */}
-                <div className="w-[52px] h-[52px] rounded-lg bg-[#0a0f1e] border border-[rgba(0,180,245,0.08)] flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
-                  <Icon size={24} className="text-[#00b4f5]" />
+                <div className="w-[64px] h-[64px] rounded-lg bg-[rgba(0,180,245,0.12)] border border-[rgba(0,180,245,0.08)] flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
+                  <Icon size={28} className="text-[#00b4f5]" />
                 </div>
 
                 {/* Divider */}
                 <div className="w-8 h-px bg-[#00b4f5] opacity-20 mb-6" />
 
                 <h3 
-                  className="text-xl font-black mb-4 tracking-tight text-white"
+                  className="text-xl font-black mb-4 tracking-tight"
+                  style={{ color: theme === 'light' ? '#0a0f1e' : '#ffffff' }}
                 >
                   {title}
                 </h3>
-                <p className="text-sm leading-relaxed font-medium text-[#c0ccda] group-hover:text-white transition-colors">
+                
+                <p className="text-sm leading-relaxed font-medium mb-6" style={{ color: theme === 'light' ? '#64748b' : '#c0ccda' }}>
                   {desc}
                 </p>
+
+                {/* Feature Highlights */}
+                <div className="flex flex-col gap-3 mb-auto">
+                  {highlights.map((item, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#00b4f5]" />
+                      <span className="text-[13px] font-medium" style={{ color: theme === 'light' ? '#475569' : '#94a3b8' }}>
+                        {item}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Learn More Row */}
+                <div className="w-full pt-8 flex items-center justify-end">
+                   <Link to="/features" className="group/link flex items-center gap-2 text-sm font-bold text-[#00b4f5] hover:brightness-110 transition-all">
+                      Learn More <ArrowRight size={16} className="transition-transform group-hover/link:translate-x-1" />
+                   </Link>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -334,45 +385,59 @@ export default function LandingPage() {
         className="w-full py-20 sm:py-32 relative z-10 transition-colors duration-500 overflow-hidden"
         style={{ backgroundColor: theme === 'light' ? '#f8fbfc' : '#050a14' }}
       >
-         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
-            {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00b4f5]/10 blur-[120px] rounded-full point-events-none z-0" />
-            
-            <motion.h2 
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              className="font-display font-black text-4xl sm:text-5xl md:text-7xl mb-6 tracking-tighter relative z-10"
-              style={{ color: theme === 'light' ? '#0f172a' : '#ffffff' }}
-            >
-              Ready to Automate Your GST?
-            </motion.h2>
-            
-            <motion.p 
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="text-base sm:text-xl md:text-2xl mb-12 max-w-2xl mx-auto font-medium relative z-10"
-              style={{ color: theme === 'light' ? '#475569' : '#94a3b8' }}
-            >
-              Zero setup fees. Immediate ROI. Welcome to the new standard of Indian tax compliance.
-            </motion.p>
-            
-            <motion.div 
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center relative z-10"
-            >
-              <Link 
-                to="/register" 
-                className="w-full sm:w-auto bg-[#00b4f5] text-[#050a14] font-bold px-10 py-4 rounded-full hover:brightness-110 transition-all active:scale-95 shadow-[0_8px_30px_rgba(0,180,245,0.3)] text-lg"
-              >
-                Start 15 Days Free Trial
-              </Link>
-            </motion.div>
+         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 relative z-10 flex flex-col md:flex-row items-center gap-[60px]">
+            {/* Left Column: Video Player */}
+            <div className="w-full md:w-1/2">
+               <div className="relative rounded-[16px] overflow-hidden border border-[rgba(0,180,245,0.3)] shadow-[0_0_30px_rgba(0,180,245,0.15)]">
+                  <video 
+                    src={promoVideo} 
+                    autoPlay 
+                    muted 
+                    loop 
+                    playsInline 
+                    className="w-full h-full object-cover rounded-[16px]"
+                  />
+               </div>
+            </div>
+
+            {/* Right Column: Content */}
+            <div className="w-full md:w-1/2 flex flex-col justify-center text-center md:text-left">
+               <motion.h2 
+                 initial={{ y: 20, opacity: 0 }}
+                 whileInView={{ y: 0, opacity: 1 }}
+                 viewport={{ once: true }}
+                 className="font-display font-black text-4xl sm:text-5xl md:text-7xl mb-6 tracking-tighter"
+                 style={{ color: theme === 'light' ? '#0f172a' : '#ffffff' }}
+               >
+                 Ready to Automate Your GST?
+               </motion.h2>
+               
+               <motion.p 
+                 initial={{ y: 20, opacity: 0 }}
+                 whileInView={{ y: 0, opacity: 1 }}
+                 viewport={{ once: true }}
+                 transition={{ delay: 0.1 }}
+                 className="text-base sm:text-lg md:text-xl mb-12 font-medium"
+                 style={{ color: theme === 'light' ? '#475569' : '#94a3b8' }}
+               >
+                 Zero setup fees. Immediate ROI. Welcome to the new standard of Indian tax compliance.
+               </motion.p>
+               
+               <motion.div 
+                 initial={{ y: 20, opacity: 0 }}
+                 whileInView={{ y: 0, opacity: 1 }}
+                 viewport={{ once: true }}
+                 transition={{ delay: 0.2 }}
+                 className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center"
+               >
+                 <Link 
+                   to="/register" 
+                   className="w-full sm:w-auto bg-[#00b4f5] text-[#050a14] font-bold px-10 py-4 rounded-full hover:brightness-110 transition-all active:scale-95 shadow-[0_8px_30px_rgba(0,180,245,0.3)] text-lg text-center"
+                 >
+                   Start 15 Days Free Trial
+                 </Link>
+               </motion.div>
+            </div>
          </div>
       </section>
 
