@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from app.core.config import settings
-from app.api.v1.routes import auth, business, invoices, returns, forecast, reports, admin
+from app.api.v1.routes import auth, business, invoices, returns, forecast, reports, admin, ai_chat
 from app.db.database import init_db
 import os
 from app.db.database import init_db
@@ -42,6 +42,7 @@ app.include_router(returns.router, prefix="/api/v1/returns", tags=["Returns"])
 app.include_router(forecast.router, prefix="/api/v1/forecast", tags=["Forecast"])
 app.include_router(reports.router, prefix="/api/v1/reports", tags=["Reports"])
 app.include_router(admin.router, prefix="/api/v1/admin", tags=["Admin"])
+app.include_router(ai_chat.router, prefix="/api/v1/ai", tags=["AI Chat"])
 
 
 @app.get("/")
