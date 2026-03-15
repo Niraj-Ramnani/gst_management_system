@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Zap, Shield, TrendingUp, FileText, ArrowRight, CheckCircle, BarChart3, Globe, Sparkles, Cpu, Layers, MousePointer2, Upload, Sun, Moon, Star, Menu } from 'lucide-react'
+import { Zap, Shield, TrendingUp, FileText, ArrowRight, CheckCircle, BarChart3, Globe, Sparkles, Cpu, Layers, MousePointer2, Upload, Sun, Moon, Star, Menu, Check, Crown, IndianRupee } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 import heroBg from '../assets/hero-bg.png'
 import promoVideo from '../assets/JKLU_Video.mp4'
@@ -142,7 +142,6 @@ export default function LandingPage() {
 
         {/* Bottom Blending Gradient */}
         <div 
-          className="absolute bottom-0 left-0 right-0 h-32 md:h-48 z-[5] pointer-events-none transition-all duration-500"
           className="absolute bottom-0 left-0 right-0 h-24 md:h-32 z-[5] pointer-events-none transition-all duration-500"
           style={{
             background: `linear-gradient(to bottom, transparent 0%, ${theme === 'light' ? '#ffffff' : '#080d1a'} 100%)`,
@@ -476,6 +475,175 @@ export default function LandingPage() {
                 />
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section 
+        id="pricing"
+        className="w-full py-16 sm:py-24 transition-colors duration-500 relative z-10 border-b"
+        style={{ 
+          backgroundColor: theme === 'light' ? '#f8fbfc' : '#050a14',
+          borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(255,255,255,0.05)'
+        }}
+      >
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <span className="text-[11px] font-black uppercase tracking-[0.3em] mb-4 block transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#00b4f5' }}>
+              PRICING
+            </span>
+            <h2 
+              className="font-display font-black text-4xl sm:text-5xl md:text-6xl tracking-tight mb-4 transition-colors duration-300"
+              style={{ color: theme === 'light' ? '#0f172a' : '#ffffff' }}
+            >
+              Simple Transparent Pricing
+            </h2>
+            <p className="text-base sm:text-lg font-medium transition-colors duration-300" style={{ color: theme === 'light' ? '#475569' : '#94a3b8' }}>
+              No hidden fees. No surprises. Cancel anytime.
+            </p>
+          </div>
+
+          {/* Cards Container */}
+          <div className="max-w-[900px] mx-auto flex flex-col md:flex-row gap-8 justify-center">
+            
+            {/* Pay Per Invoice Card */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex-1 rounded-[24px] p-8 flex flex-col relative overflow-hidden transition-all duration-300"
+              style={{
+                backgroundColor: theme === 'light' ? '#ffffff' : '#0d1424',
+                border: theme === 'light' ? '1px solid #e2e8f0' : '1px solid rgba(0,180,245,0.2)',
+                boxShadow: theme === 'light' ? '0 4px 24px rgba(0,0,0,0.08)' : 'none'
+              }}
+            >
+              {/* Badge */}
+              <div 
+                className="self-start mb-6 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-colors duration-300 border"
+                style={{
+                  backgroundColor: theme === 'light' ? '#eff6ff' : 'rgba(37,99,235,0.1)',
+                  borderColor: theme === 'light' ? '#bfdbfe' : 'rgba(37,99,235,0.3)',
+                  color: theme === 'light' ? '#2563eb' : '#3b82f6'
+                }}
+              >
+                FLEXIBLE
+              </div>
+
+              {/* Icon & Price */}
+              <div className="mb-8">
+                <IndianRupee size={24} className="mb-4 transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#00b4f5' }} />
+                <div className="flex items-baseline gap-2">
+                  <span className="font-display font-black text-5xl transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#00b4f5' }}>₹150</span>
+                </div>
+                <span className="text-sm font-medium mt-1 block transition-colors duration-300" style={{ color: theme === 'light' ? '#64748b' : '#94a3b8' }}>per invoice</span>
+              </div>
+
+              <div className="w-full h-px mb-8 transition-colors duration-300" style={{ backgroundColor: theme === 'light' ? '#e2e8f0' : 'rgba(255,255,255,0.1)' }} />
+
+              {/* Features List */}
+              <div className="flex flex-col gap-4 mb-10 grow">
+                {[
+                  "Upload single or bulk invoices",
+                  "AI data extraction included",
+                  "GST calculation included",
+                  "Download GSTR reports",
+                  "No monthly commitment"
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <Check size={18} className="shrink-0 mt-0.5 transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#3b82f6' }} />
+                    <span className="text-sm font-medium transition-colors duration-300" style={{ color: theme === 'light' ? '#475569' : '#cbd5e1' }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button 
+                className="w-full py-4 rounded-xl font-bold text-sm transition-all duration-300 border-[1.5px] hover:bg-opacity-10"
+                style={{
+                  borderColor: theme === 'light' ? '#2563eb' : '#00b4f5',
+                  color: theme === 'light' ? '#2563eb' : '#00b4f5',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Get Started
+              </button>
+            </motion.div>
+
+            {/* Monthly Subscription Card */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="flex-1 rounded-[24px] p-8 flex flex-col relative overflow-hidden transition-all duration-300 transform md:-translate-y-4"
+              style={{
+                backgroundColor: theme === 'light' ? '#ffffff' : '#0d1424',
+                border: theme === 'light' ? '2px solid #93c5fd' : '2px solid rgba(0,180,245,0.5)',
+                boxShadow: theme === 'light' ? '0 10px 40px rgba(147,197,253,0.3)' : '0 10px 40px rgba(0,180,245,0.15)'
+              }}
+            >
+              {/* Popular Badge */}
+              <div 
+                className="self-start mb-6 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-colors duration-300"
+                style={{
+                  backgroundColor: theme === 'light' ? '#2563eb' : '#00b4f5',
+                  color: theme === 'light' ? '#ffffff' : '#050a14'
+                }}
+              >
+                MOST POPULAR
+              </div>
+
+              {/* Icon & Price */}
+              <div className="mb-8">
+                <Crown size={28} className="mb-4 transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#00b4f5' }} />
+                <div className="flex items-baseline gap-2">
+                  <span className="font-display font-black text-5xl transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#00b4f5' }}>₹999</span>
+                </div>
+                <div className="flex flex-col mt-1">
+                  <span className="text-sm font-medium transition-colors duration-300" style={{ color: theme === 'light' ? '#64748b' : '#94a3b8' }}>per month</span>
+                  <span className="text-xs font-bold line-through mt-1 transition-colors duration-300" style={{ color: theme === 'light' ? '#16a34a' : '#10b981' }}>Save vs per invoice pricing</span>
+                </div>
+              </div>
+
+              <div className="w-full h-px mb-8 transition-colors duration-300" style={{ backgroundColor: theme === 'light' ? '#e2e8f0' : 'rgba(255,255,255,0.1)' }} />
+
+              {/* Features List */}
+              <div className="flex flex-col gap-4 mb-10 grow">
+                {[
+                  "Unlimited invoice uploads",
+                  "AI OCR extraction unlimited",
+                  "All GST calculations included",
+                  "GSTR-1 and GSTR-3B reports",
+                  "Fraud detection on all invoices",
+                  "GST liability forecasting",
+                  "Priority support"
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <Check size={18} className="shrink-0 mt-0.5 transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#00b4f5' }} />
+                    <span className="text-sm font-bold transition-colors duration-300" style={{ color: theme === 'light' ? '#0f172a' : '#ffffff' }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <Link 
+                to="/register"
+                className="w-full py-4 rounded-xl font-black text-sm text-center transition-all duration-300 hover:brightness-110 active:scale-[0.98]"
+                style={{
+                  backgroundColor: theme === 'light' ? '#2563eb' : '#00b4f5',
+                  color: theme === 'light' ? '#ffffff' : '#050a14',
+                  boxShadow: theme === 'light' ? '0 4px 20px rgba(37,99,235,0.4)' : '0 4px 20px rgba(0,180,245,0.3)'
+                }}
+              >
+                Start Free Trial
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Reassurance text */}
+          <div className="mt-12 flex justify-center items-center gap-2 text-sm font-medium transition-colors duration-300" style={{ color: theme === 'light' ? '#64748b' : '#94a3b8' }}>
+            <Shield size={16} /> All plans include bank-grade security and GST portal compliance.
           </div>
         </div>
       </section>
