@@ -538,16 +538,19 @@ export default function LandingPage() {
                   color: theme === 'light' ? '#2563eb' : '#3b82f6'
                 }}
               >
-                FLEXIBLE
+                MONTHLY
               </div>
 
               {/* Icon & Price */}
               <div className="mb-8">
                 <IndianRupee size={24} className="mb-4 transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#00b4f5' }} />
                 <div className="flex items-baseline gap-2">
-                  <span className="font-display font-black text-5xl transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#00b4f5' }}>₹150</span>
+                  <span className="font-display font-black text-5xl transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#00b4f5' }}>₹999</span>
                 </div>
-                <span className="text-sm font-medium mt-1 block transition-colors duration-300" style={{ color: theme === 'light' ? '#64748b' : '#94a3b8' }}>per invoice</span>
+                <div className="flex flex-col mt-1">
+                  <span className="text-sm font-medium transition-colors duration-300" style={{ color: theme === 'light' ? '#64748b' : '#94a3b8' }}>per month</span>
+                  <span className="text-xs font-bold mt-1 transition-colors duration-300" style={{ color: theme === 'light' ? '#16a34a' : '#10b981' }}>Save ₹2000+ vs CA fees monthly</span>
+                </div>
               </div>
 
               <div className="w-full h-px mb-8 transition-colors duration-300" style={{ backgroundColor: theme === 'light' ? '#e2e8f0' : 'rgba(255,255,255,0.1)' }} />
@@ -576,7 +579,7 @@ export default function LandingPage() {
                   backgroundColor: 'transparent'
                 }}
               >
-                Get Started
+                Start Monthly Plan
               </button>
             </motion.div>
 
@@ -601,18 +604,18 @@ export default function LandingPage() {
                   color: theme === 'light' ? '#ffffff' : '#050a14'
                 }}
               >
-                MOST POPULAR
+                BEST VALUE
               </div>
 
               {/* Icon & Price */}
               <div className="mb-8">
                 <Crown size={28} className="mb-4 transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#00b4f5' }} />
                 <div className="flex items-baseline gap-2">
-                  <span className="font-display font-black text-5xl transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#00b4f5' }}>₹999</span>
+                  <span className="font-display font-black text-5xl transition-colors duration-300" style={{ color: theme === 'light' ? '#2563eb' : '#00b4f5' }}>₹9,999</span>
                 </div>
                 <div className="flex flex-col mt-1">
-                  <span className="text-sm font-medium transition-colors duration-300" style={{ color: theme === 'light' ? '#64748b' : '#94a3b8' }}>per month</span>
-                  <span className="text-xs font-bold line-through mt-1 transition-colors duration-300" style={{ color: theme === 'light' ? '#16a34a' : '#10b981' }}>Save vs per invoice pricing</span>
+                  <span className="text-sm font-medium transition-colors duration-300" style={{ color: theme === 'light' ? '#64748b' : '#94a3b8' }}>per year</span>
+                  <span className="text-xs font-bold mt-1 transition-colors duration-300" style={{ color: theme === 'light' ? '#16a34a' : '#10b981' }}>Save ₹1,989 vs monthly plan</span>
                 </div>
               </div>
 
@@ -645,8 +648,11 @@ export default function LandingPage() {
                   boxShadow: theme === 'light' ? '0 4px 20px rgba(37,99,235,0.4)' : '0 4px 20px rgba(0,180,245,0.3)'
                 }}
               >
-                Start Free Trial
+                Start Yearly Plan
               </Link>
+              <p className="text-[12px] text-center mt-3 font-medium text-slate-500">
+                Equivalent to just ₹833 per month
+              </p>
             </motion.div>
           </div>
 
