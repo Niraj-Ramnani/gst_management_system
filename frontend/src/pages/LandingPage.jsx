@@ -169,13 +169,7 @@ export default function LandingPage() {
               to="/register" 
               className="w-full sm:w-auto bg-[#00b4f5] text-[#050a14] font-bold px-8 py-3.5 rounded-full hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-cyan-900/40"
             >
-              Start Free Trial
-            </Link>
-            <Link 
-              to="/login" 
-              className="w-full sm:w-auto border-[1.5px] border-[#00b4f5] text-[#00b4f5] font-bold px-8 py-3.5 rounded-full hover:bg-cyan-500/10 transition-all active:scale-95"
-            >
-              Watch Demo
+              Start 15 Days Free Trial
             </Link>
           </motion.div>
         </div>
@@ -236,8 +230,8 @@ export default function LandingPage() {
            
            {[
              { num: "01.", title: "INTAKE", icon: Upload, desc: "Upload PDFs or connect via API" },
-             { num: "02.", title: "ANALYSIS", icon: Cpu, desc: "Neural networks parse documents" },
-             { num: "03.", title: "MATCHING", icon: Layers, desc: "Reconcile with master ITC data" },
+             { num: "02.", title: "ANALYSIS", icon: Cpu, desc: "DocTR OCR reads your invoice and automatically extracts GSTIN, amount, date and tax rate fields." },
+             { num: "03.", title: "MATCHING", icon: Layers, desc: "Seller and buyer state codes are compared to automatically split tax into CGST plus SGST or IGST." },
              { num: "04.", title: "OUTPUT", icon: CheckCircle, desc: "Generate flawless return files" }
            ].map((step, idx) => (
              <motion.div 
@@ -291,25 +285,42 @@ export default function LandingPage() {
             ].map(({ icon: Icon, title, desc }) => (
               <motion.div 
                 key={title} 
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="p-8 pb-10 rounded-3xl hover:scale-[1.02] transition-transform duration-300"
+                className="group relative p-12 rounded-[16px] transition-all duration-300 hover:-translate-y-1 overflow-hidden"
                 style={{ 
-                  backgroundColor: theme === 'light' ? '#ffffff' : '#0f1729', 
-                  border: theme === 'light' ? '1px solid rgba(15,23,42,0.1)' : '1px solid rgba(0,180,245,0.15)',
-                  boxShadow: theme === 'light' ? '0 10px 40px rgba(0,0,0,0.04)' : '0 10px 40px rgba(0,0,0,0.2)'
+                  backgroundColor: '#0d1424', 
+                  border: '1px solid rgba(0,180,245,0.25)',
+                  boxShadow: '0 -2px 20px rgba(0,180,245,0.08) inset'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(0,180,245,0.6)';
+                  e.currentTarget.style.filter = 'brightness(1.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(0,180,245,0.25)';
+                  e.currentTarget.style.filter = 'brightness(1)';
                 }}
               >
-                <Icon size={32} className="text-[#00b4f5] mb-6 block" strokeWidth={2.5} />
+                {/* Top Accent Line */}
+                <div className="absolute top-0 left-0 w-full h-[3px] bg-[#00b4f5] opacity-30 transition-opacity duration-300 group-hover:opacity-100" />
+                
+                {/* Icon Container */}
+                <div className="w-[52px] h-[52px] rounded-lg bg-[#0a0f1e] border border-[rgba(0,180,245,0.08)] flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
+                  <Icon size={24} className="text-[#00b4f5]" />
+                </div>
+
+                {/* Divider */}
+                <div className="w-8 h-px bg-[#00b4f5] opacity-20 mb-6" />
+
                 <h3 
-                  className="text-xl font-black mb-4 tracking-tight"
-                  style={{ color: theme === 'light' ? '#0f172a' : '#ffffff' }}
+                  className="text-xl font-black mb-4 tracking-tight text-white"
                 >
                   {title}
                 </h3>
-                <p className="text-sm leading-relaxed font-medium" style={{ color: theme === 'light' ? '#64748b' : '#94a3b8' }}>
+                <p className="text-sm leading-relaxed font-medium text-[#c0ccda] group-hover:text-white transition-colors">
                   {desc}
                 </p>
               </motion.div>
@@ -359,13 +370,7 @@ export default function LandingPage() {
                 to="/register" 
                 className="w-full sm:w-auto bg-[#00b4f5] text-[#050a14] font-bold px-10 py-4 rounded-full hover:brightness-110 transition-all active:scale-95 shadow-[0_8px_30px_rgba(0,180,245,0.3)] text-lg"
               >
-                Start Free Trial
-              </Link>
-              <Link 
-                to="/login" 
-                className="w-full sm:w-auto border-[1.5px] border-[#00b4f5] text-[#00b4f5] font-bold px-10 py-4 rounded-full hover:bg-cyan-500/10 transition-all active:scale-95 text-lg"
-              >
-                Watch Demo
+                Start 15 Days Free Trial
               </Link>
             </motion.div>
          </div>
