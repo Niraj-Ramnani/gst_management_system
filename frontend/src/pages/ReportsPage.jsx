@@ -5,6 +5,7 @@ import LoadingSpinner from '../components/ui/LoadingSpinner'
 import { formatCurrency, MONTHS } from '../utils/formatters'
 import toast from 'react-hot-toast'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts'
+import { useTheme } from '../context/ThemeContext'
 import clsx from 'clsx'
 
 export default function ReportsPage() {
@@ -14,6 +15,8 @@ export default function ReportsPage() {
   const [taxData, setTaxData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [generating, setGenerating] = useState(false)
+  const { theme } = useTheme()
+  const isLight = theme === 'light'
 
   useEffect(() => { loadReports() }, [month, year])
 
@@ -49,14 +52,14 @@ export default function ReportsPage() {
     <div className="space-y-8 animate-fade-in">
       <div className="page-header">
         <div>
-          <h1 className="font-display font-bold text-2xl text-white">Reports & Returns</h1>
-          <p className="text-slate-400 text-sm mt-0.5">Generate GST summaries and return filings</p>
+          <h1 className={clsx("font-display font-bold text-2xl", isLight ? "text-[#0f172a]" : "text-white")}>Reports & Returns</h1>
+          <p className={clsx("text-sm mt-0.5", isLight ? "text-slate-500" : "text-slate-400")}>Generate GST summaries and return filings</p>
         </div>
       </div>
 
       {/* Period Selector */}
       <div className="card p-6">
-        <h3 className="font-semibold text-white mb-4">Select Filing Period</h3>
+        <h3 className={clsx("font-semibold mb-4", isLight ? "text-[#0f172a]" : "text-white")}>Select Filing Period</h3>
         <div className="flex gap-4 flex-wrap items-end">
           <div>
             <label className="label">Month</label>
@@ -78,10 +81,10 @@ export default function ReportsPage() {
 
       {/* Generated Return Summary */}
       {summary && (
-        <div className="card p-6 border-success-800/50 bg-success-900/10">
+        <div className={clsx("card p-6", isLight ? "border-success-200 bg-success-50/50" : "border-success-800/50 bg-success-900/10")}>
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-semibold text-white flex items-center gap-2">
-              <FileText size={16} className="text-success-400" />
+            <h3 className={clsx("font-semibold flex items-center gap-2", isLight ? "text-success-800" : "text-white")}>
+              <FileText size={16} className={isLight ? "text-success-600" : "text-success-400"} />
               GSTR Summary — {MONTHS.find(m => m.value === summary.month)?.label} {summary.year}
             </h3>
             <button className="btn-ghost flex items-center gap-2 text-sm">
@@ -95,9 +98,9 @@ export default function ReportsPage() {
               { label: 'Sales Tax (Output)', value: formatCurrency(summary.total_sales_tax), mono: true },
               { label: 'Purchase Tax (ITC)', value: formatCurrency(summary.input_tax_credit), mono: true },
             ].map(({ label, value, mono }) => (
-              <div key={label} className="bg-surface-950 rounded-xl p-4 border border-slate-800">
-                <p className="text-xs text-slate-400 mb-1">{label}</p>
-                <p className={clsx('text-lg font-bold text-white', mono && 'font-mono')}>{value}</p>
+              <div key={label} className={clsx("rounded-xl p-4 border", isLight ? "bg-white border-slate-200 shadow-sm" : "bg-surface-950 border-slate-800")}>
+                <p className={clsx("text-xs mb-1", isLight ? "text-slate-500" : "text-slate-400")}>{label}</p>
+                <p className={clsx('text-lg font-bold', isLight ? "text-[#0f172a]" : "text-white", mono && 'font-mono')}>{value}</p>
               </div>
             ))}
           </div>
@@ -114,9 +117,9 @@ export default function ReportsPage() {
               ['SGST Payable', summary.sgst_payable],
               ['IGST Payable', summary.igst_payable],
             ].map(([label, val]) => (
-              <div key={label} className="bg-surface-950 rounded-lg p-3 border border-slate-800">
-                <p className="text-xs text-slate-400">{label}</p>
-                <p className="font-semibold text-white font-mono mt-0.5">{formatCurrency(val)}</p>
+              <div key={label} className={clsx("rounded-lg p-3 border", isLight ? "bg-white border-slate-200 shadow-sm" : "bg-surface-950 border-slate-800")}>
+                <p className={clsx("text-xs", isLight ? "text-slate-500" : "text-slate-400")}>{label}</p>
+                <p className={clsx("font-semibold font-mono mt-0.5", isLight ? "text-[#0f172a]" : "text-white")}>{formatCurrency(val)}</p>
               </div>
             ))}
           </div>
@@ -129,17 +132,24 @@ export default function ReportsPage() {
           <h3 className="section-title mb-6">Tax History (Last 6 Months)</h3>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={barData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-              <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 12 }} stroke="#475569" />
-              <YAxis tick={{ fill: '#64748b', fontSize: 12 }} stroke="#475569" tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} />
+              <CartesianGrid strokeDasharray="3 3" stroke={isLight ? "#e2e8f0" : "#1e293b"} />
+              <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 12 }} stroke={isLight ? "#cbd5e1" : "#475569"} />
+              <YAxis tick={{ fill: '#64748b', fontSize: 12 }} stroke={isLight ? "#cbd5e1" : "#475569"} tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} />
               <Tooltip
-                contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '12px', fontSize: '12px' }}
+                contentStyle={{ 
+                  background: isLight ? '#ffffff' : '#1e293b', 
+                  border: isLight ? '1px solid #e2e8f0' : '1px solid #334155', 
+                  borderRadius: '12px', 
+                  fontSize: '12px',
+                  color: isLight ? '#1e293b' : '#ffffff'
+                }}
+                itemStyle={{ color: isLight ? '#1e293b' : '#ffffff' }}
                 formatter={v => formatCurrency(v)}
               />
               <Legend wrapperStyle={{ color: '#94a3b8', fontSize: '12px' }} />
-              <Bar dataKey="Sales Tax" fill="#0ea5e9" fillOpacity={0.8} radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Purchase Tax" fill="#6366f1" fillOpacity={0.8} radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Net Payable" fill="#22c55e" fillOpacity={0.8} radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Sales Tax" fill="#0ea5e9" fillOpacity={isLight ? 0.9 : 0.8} radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Purchase Tax" fill="#6366f1" fillOpacity={isLight ? 0.9 : 0.8} radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Net Payable" fill="#22c55e" fillOpacity={isLight ? 0.9 : 0.8} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -156,9 +166,9 @@ export default function ReportsPage() {
               { label: 'Total ITC', value: formatCurrency(taxData.total_input_tax_credit) },
               { label: 'Net GST Paid', value: formatCurrency(taxData.total_net_gst_payable) },
             ].map(({ label, value }) => (
-              <div key={label} className="bg-surface-950 rounded-xl p-4 border border-slate-800">
-                <p className="text-xs text-slate-400 mb-1">{label}</p>
-                <p className="text-lg font-bold text-white font-mono">{value}</p>
+              <div key={label} className={clsx("rounded-xl p-4 border", isLight ? "bg-white border-slate-200 shadow-sm" : "bg-surface-950 border-slate-800")}>
+                <p className={clsx("text-xs mb-1", isLight ? "text-slate-500" : "text-slate-400")}>{label}</p>
+                <p className={clsx("text-lg font-bold font-mono", isLight ? "text-[#0f172a]" : "text-white")}>{value}</p>
               </div>
             ))}
           </div>

@@ -6,7 +6,7 @@ export default {
       fontFamily: {
         sans: ['"Inter"', '"Plus Jakarta Sans"', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
-        display: ['"Outfit"', '"Syne"', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', '"Inter"', 'sans-serif'],
       },
       colors: {
         primary: {

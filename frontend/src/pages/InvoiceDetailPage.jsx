@@ -5,9 +5,11 @@ import { ArrowLeft, Edit3, Check, RefreshCw } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { invoiceService } from '../services/api'
 import { useNotification } from '../context/NotificationContext'
+import { useTheme } from '../context/ThemeContext'
 import StatusBadge from '../components/ui/StatusBadge'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
 import { formatCurrency, formatDate } from '../utils/formatters'
+import clsx from 'clsx'
 
 export default function InvoiceDetailPage() {
   const { id } = useParams()
@@ -18,6 +20,8 @@ export default function InvoiceDetailPage() {
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
   const { register, handleSubmit, reset } = useForm()
+  const { theme } = useTheme()
+  const isLight = theme === 'light'
 
   useEffect(() => { loadInvoice() }, [id])
 
@@ -70,7 +74,10 @@ export default function InvoiceDetailPage() {
       {editing && !readOnly ? (
         <input {...register(name)} type={type} step="0.01" className="input text-sm" />
       ) : (
-        <p className="text-sm text-slate-200 bg-surface-950 border border-slate-800 rounded-xl px-4 py-2.5">
+        <p className={clsx(
+          "text-sm border rounded-xl px-4 py-2.5",
+          isLight ? "text-[#0f172a] bg-white border-slate-200" : "text-slate-200 bg-surface-950 border-slate-800"
+        )}>
           {type === 'number' ? formatCurrency(invoice?.[name]) : (invoice?.[name] || '—')}
         </p>
       )}
@@ -82,12 +89,12 @@ export default function InvoiceDetailPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate('/invoices')} className="w-10 h-10 flex items-center justify-center bg-slate-900 border border-slate-800 rounded-xl text-slate-400 hover:text-white transition-colors">
+          <button onClick={() => navigate('/invoices')} className={clsx("w-10 h-10 flex items-center justify-center border rounded-xl transition-colors", isLight ? "bg-white border-slate-200 text-slate-500 hover:text-[#0f172a] hover:border-slate-300" : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white")}>
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="section-title text-xl sm:text-2xl">Ledger Entry</h1>
-            <p className="text-slate-500 text-[10px] uppercase font-mono tracking-widest mt-0.5">{invoice?.id}</p>
+            <h1 className={clsx("section-title text-xl sm:text-2xl", isLight ? "text-[#0f172a]" : "text-white")}>Ledger Entry</h1>
+            <p className={clsx("text-[10px] uppercase font-mono tracking-widest mt-0.5", isLight ? "text-slate-400" : "text-slate-500")}>{invoice?.id}</p>
           </div>
         </div>
         
@@ -146,19 +153,19 @@ export default function InvoiceDetailPage() {
                 <div>
                   <label className="label">Category</label>
                   {editing ? (
-                    <select {...register('invoice_type')} className="input text-xs font-bold bg-slate-900">
+                    <select {...register('invoice_type')} className={clsx("input text-xs font-bold", isLight ? "bg-white" : "bg-slate-900")}>
                       <option value="purchase">Purchase</option>
                       <option value="sale">Sale</option>
                     </select>
                   ) : (
-                    <div className="px-4 py-2.5 bg-slate-950/50 border border-slate-800 rounded-xl text-xs font-bold text-slate-200 capitalize">
+                    <div className={clsx("px-4 py-2.5 border rounded-xl text-xs font-bold capitalize", isLight ? "bg-white border-slate-200 text-[#0f172a]" : "bg-slate-950/50 border-slate-800 text-slate-200")}>
                       {invoice?.invoice_type}
                     </div>
                   )}
                 </div>
                 <div>
                   <label className="label">Tax Region</label>
-                  <div className="px-4 py-2.5 bg-slate-950/50 border border-slate-800 rounded-xl text-[10px] font-bold text-slate-400">
+                  <div className={clsx("px-4 py-2.5 border rounded-xl text-[10px] font-bold", isLight ? "bg-white border-slate-200 text-slate-500" : "bg-slate-950/50 border-slate-800 text-slate-400")}>
                     {invoice?.is_interstate ? 'INTER-STATE' : 'INTRA-STATE'}
                   </div>
                 </div>
@@ -178,9 +185,9 @@ export default function InvoiceDetailPage() {
                 <Field label="SGST" name="sgst" type="number" />
                 <Field label="IGST" name="igst" type="number" />
               </div>
-              <div className="pt-2 border-t border-white/5">
-                <label className="label text-primary-400">Total Payable Amount</label>
-                <div className="px-4 py-3 bg-primary-500/5 border border-primary-500/20 rounded-xl text-lg font-black text-white font-mono">
+              <div className={clsx("pt-2 border-t", isLight ? "border-slate-100" : "border-white/5")}>
+                <label className={clsx("label", isLight ? "text-primary-600" : "text-primary-400")}>Total Payable Amount</label>
+                <div className={clsx("px-4 py-3 border rounded-xl text-lg font-black font-mono", isLight ? "bg-primary-50 border-primary-200 text-primary-700" : "bg-primary-500/5 border-primary-500/20 text-white")}>
                   {formatCurrency(invoice?.total_amount)}
                 </div>
               </div>
@@ -195,12 +202,12 @@ export default function InvoiceDetailPage() {
             <div className="space-y-6">
               <div>
                 <label className="label">OCR Confidence Score</label>
-                <div className="mt-2 bg-slate-950/50 border border-slate-800 p-4 rounded-xl">
+                <div className={clsx("mt-2 border p-4 rounded-xl", isLight ? "bg-slate-50 border-slate-200" : "bg-slate-950/50 border-slate-800")}>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Extraction Quality</span>
-                    <span className="text-sm font-black text-white font-mono">{Math.round((invoice?.parser_confidence || 0) * 100)}%</span>
+                    <span className={clsx("text-[10px] font-bold uppercase tracking-widest", isLight ? "text-slate-400" : "text-slate-500")}>Extraction Quality</span>
+                    <span className={clsx("text-sm font-black font-mono", isLight ? "text-[#0f172a]" : "text-white")}>{Math.round((invoice?.parser_confidence || 0) * 100)}%</span>
                   </div>
-                  <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                  <div className={clsx("h-1.5 rounded-full overflow-hidden", isLight ? "bg-slate-200" : "bg-slate-800")}>
                     <div
                       className="h-full bg-gradient-to-r from-primary-600 to-indigo-400 transition-all duration-1000"
                       style={{ width: `${(invoice?.parser_confidence || 0) * 100}%` }}
@@ -209,8 +216,8 @@ export default function InvoiceDetailPage() {
                 </div>
               </div>
               <Field label="HSN / SAC Classifier" name="hsn_sac_code" />
-              <div className="bg-slate-900/40 rounded-xl p-4 border border-slate-800/60">
-                <p className="text-[10px] text-slate-500 leading-relaxed italic">
+              <div className={clsx("rounded-xl p-4 border", isLight ? "bg-blue-50/50 border-blue-100" : "bg-slate-900/40 border-slate-800/60")}>
+                <p className={clsx("text-[10px] leading-relaxed italic", isLight ? "text-blue-600" : "text-slate-500")}>
                   AI has matched this invoice against GST rules. Please verify all amounts before final return filing.
                 </p>
               </div>

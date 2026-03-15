@@ -65,7 +65,7 @@ export default function LandingPage() {
         <div className="max-w-[1440px] mx-auto flex items-center justify-between px-10 py-4">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Zap size={20} style={{ color: '#00b4f5' }} fill="#00b4f5" />
+              <Zap size={20} className={theme === 'light' ? "text-white" : "text-black"} fill="currentColor" />
             </div>
             <span className="font-display font-black text-[22px] tracking-tight" style={{ color: theme === 'light' ? '#0a0f1e' : '#ffffff' }}>
               GST<span style={{ color: '#00b4f5' }}>Smart</span>

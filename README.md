@@ -14,9 +14,10 @@
 | 📊 **GST Calculation** | Auto CGST/SGST/IGST split, intra/inter-state detection, ITC calculation |
 | 📈 **Forecasting** | Prophet/ARIMA-based next-month GST liability prediction |
 | 📋 **Return Generation** | One-click GSTR-style monthly summary |
+| 🤖 **Global AI Assistant** | Multilingual chatbot with auto-detection & dynamic suggestions |
 | 🔐 **JWT Auth** | Role-based access: Admin, Accountant, Business Owner |
-| 💎 **Premium UI/UX** | Next-gen dark mode with glassmorphism, micro-animations, and 60 FPS transitions |
-| 📱 **Mobile Optimized** | Fully responsive design with sliding sidebar drawer for field use |
+| 💎 **Premium UI/UX** | Theme-aware glassmorphism, fluid micro-animations, and optimized typography |
+| 📱 **Mobile Optimized** | Fully responsive design with floating chatbot and sliding sidebar |
 
 ---
 
@@ -152,6 +153,7 @@ gst-management-system/
 | GET | `/api/v1/returns/monthly-summary` | Monthly GST summary |
 | POST | `/api/v1/returns/generate` | Generate return |
 | GET | `/api/v1/forecast/next-month` | Next month prediction |
+| POST | `/api/v1/ai/chat` | Multilingual AI Chat Assistant |
 | GET | `/api/v1/reports/tax-summary` | Tax summary report |
 
 Full interactive docs at: `http://localhost:8000/docs`
@@ -192,6 +194,5 @@ Prophet time-series on monthly returns → confidence interval
 - [ ] Multi-business support per account
 - [ ] Model retraining from verified/corrected invoices
 - [ ] Invoice confidence heatmap visualization
-- [ ] GST AI chatbot assistant
 - [ ] Bulk invoice import via ZIP
 - [ ] Audit trail with full changelog view

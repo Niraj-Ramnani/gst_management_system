@@ -11,7 +11,6 @@ router = APIRouter()
 
 class ChatRequest(BaseModel):
     message: str
-    language: str = "English"
     context: Optional[Dict[str, Any]] = None
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
@@ -24,11 +23,13 @@ async def ai_chat(request: ChatRequest):
 
         system_prompt = f"""You are GSTSmart AI, an expert GST tax assistant for Indian small businesses. 
 The user's current forecast data is provided in the context. 
-Always respond in the exact language specified in the language field. 
-Supported languages are English, Hindi, Gujarati, Marathi, Tamil. 
-Keep all responses concise under 150 words and highly practical. 
+1. Detect mapping of user's language and respond naturally in the SAME language. 
+2. Provide exactly 3 short, relevant follow-up questions (suggestions) in the SAME detected language.
+3. Output your response in valid JSON format with keys: "reply" (string) and "suggestions" (list of 3 strings).
+Supported primary languages are English, Hindi, Gujarati, Marathi, Tamil, but always match the user's input language. 
+Keep the reply concise under 150 words and highly practical. 
 Focus only on GST compliance, invoice patterns, tax liability trends, fraud detection insights, and GST filing advice relevant to Indian businesses. 
-Always format currency values with rupee symbol and Indian number formatting like ₹1,00,000. 
+Always format currency values with rupee symbol and Indian number formatting like ₹1,0,000. 
 If the user asks about their forecast always use the provided context data to give specific accurate answers. 
 Never make up numbers not in the context."""
 
@@ -39,7 +40,7 @@ Never make up numbers not in the context."""
             for k, v in request.context.items():
                 ctx_text += f"- {k}: {v}\n"
 
-        user_content = f"Language: {request.language}\nUser Message: {request.message}{ctx_text}"
+        user_content = f"User Message: {request.message}{ctx_text}\nOutput JSON format only."
 
         chat_completion = client.chat.completions.create(
             messages=[
@@ -53,11 +54,13 @@ Never make up numbers not in the context."""
                 }
             ],
             model="llama-3.3-70b-versatile",
-            max_tokens=500,
+            max_tokens=600,
+            response_format={"type": "json_object"}
         )
 
-        reply = chat_completion.choices[0].message.content
-        return {"reply": reply}
+        import json
+        response_data = json.loads(chat_completion.choices[0].message.content)
+        return response_data
 
     except Exception as e:
         print(f"Groq API Error: {str(e)}")

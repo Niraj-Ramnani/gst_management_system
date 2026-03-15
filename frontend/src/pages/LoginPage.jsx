@@ -1,6 +1,5 @@
-import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useTheme } from '../context/ThemeContext'
 import toast from 'react-hot-toast'
 import { Zap, Mail, Lock, ArrowRight } from 'lucide-react'
 
@@ -8,6 +7,8 @@ export default function LoginPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm()
   const { login } = useAuth()
   const navigate = useNavigate()
+  const { theme } = useTheme()
+  const isLight = theme === 'light'
 
   const onSubmit = async (data) => {
     try {
@@ -24,7 +25,7 @@ export default function LoginPage() {
       <div className="w-full max-w-[440px] animate-in">
         <div className="text-center mb-10">
           <div className="inline-flex w-14 h-14 bg-primary-600 rounded-[1.25rem] items-center justify-center mb-6 shadow-[0_20px_50px_rgba(14,165,233,0.3)] rotate-3">
-            <Zap size={28} className="text-white" fill="white" />
+            <Zap size={28} className={isLight ? "text-white" : "text-black"} fill="currentColor" />
           </div>
           <h1 className="text-3xl font-black text-white tracking-tight mb-2">Welcome back</h1>
           <p className="text-slate-500 text-sm font-medium tracking-wide">Sign in to your GSTSmart account</p>

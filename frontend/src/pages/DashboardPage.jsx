@@ -140,8 +140,8 @@ export default function DashboardPage() {
              <Shield size={28} className="text-white" />
           </div>
           <div className="flex-1 text-center sm:text-left space-y-2 relative">
-             <h2 className="text-xl font-black text-white uppercase tracking-tight">Complete Your Setup</h2>
-             <p className="text-white/80 text-sm">Please create your business profile and GSTIN details to enable invoice scanning and tax analytics.</p>
+             <h2 className={clsx("text-xl font-black uppercase tracking-tight", theme === 'light' ? "text-white" : "text-black")}>Complete Your Setup</h2>
+             <p className={clsx("text-sm", theme === 'light' ? "text-white/80" : "text-black/80")}>Please create your business profile and GSTIN details to enable invoice scanning and tax analytics.</p>
           </div>
           <Link to="/profile" className="btn-secondary !bg-white !text-blue-600 px-8 py-3 font-black text-xs uppercase tracking-widest relative z-10 shrink-0 hover:scale-105 transition-transform">
              Setup Profile
@@ -157,7 +157,8 @@ export default function DashboardPage() {
         <Link 
           to="/upload" 
           className={clsx(
-            "h-[52px] px-6 rounded-2xl text-white font-bold flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 shadow-[0_4px_12px_rgba(37,99,235,0.2)] hover:shadow-[0_0_20px_rgba(0,180,245,0.3)] bg-gradient-to-r from-[#2563eb] to-[#00b4f5] border-none group",
+            "h-[52px] px-6 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 shadow-[0_4px_12px_rgba(37,99,235,0.2)] hover:shadow-[0_0_20px_rgba(0,180,245,0.3)] bg-gradient-to-r from-[#2563eb] to-[#00b4f5] border-none group",
+            theme === 'light' ? "text-white" : "text-black",
             profileMissing && "opacity-50 pointer-events-none cursor-not-allowed"
           )}
         >
@@ -202,76 +203,158 @@ export default function DashboardPage() {
         />
       </motion.div>
 
-      {/* Charts & Actions Row */}
+      {/* Main Content Grid: Balanced 2-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Monthly Tax Trend */}
-        <motion.div 
-          variants={itemVariants} 
-          className="p-6 sm:p-8 rounded-[24px] lg:col-span-8 relative overflow-hidden group transition-all duration-300 border"
-          style={{ 
-            backgroundColor: theme === 'light' ? '#ffffff' : '#0d1424',
-            borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(0,180,245,0.15)',
-            boxShadow: theme === 'light' ? '0 2px 16px rgba(0,0,0,0.06)' : 'none'
-          }}
-        >
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-            <div>
-              <h3 className={`text-xl font-black tracking-tight mb-1 ${theme === 'light' ? 'text-[#0f172a]' : 'text-white'}`}>Revenue & Tax Analytics</h3>
-              <p className={`text-sm font-medium ${theme === 'light' ? 'text-[#475569]' : 'text-slate-400'}`}>Monthly overview of your GST liabilities and credits</p>
+        
+        {/* Left Primary Column: Analytics & Activity */}
+        <div className="lg:col-span-8 space-y-6">
+          {/* Monthly Tax Trend */}
+          <motion.div 
+            variants={itemVariants} 
+            className="p-6 sm:p-8 rounded-[24px] relative overflow-hidden group transition-all duration-300 border"
+            style={{ 
+              backgroundColor: theme === 'light' ? '#ffffff' : '#0d1424',
+              borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(0,180,245,0.15)',
+              boxShadow: theme === 'light' ? '0 2px 16px rgba(0,0,0,0.06)' : 'none'
+            }}
+          >
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+              <div>
+                <h3 className={`text-xl font-black tracking-tight mb-1 ${theme === 'light' ? 'text-[#0f172a]' : 'text-white'}`}>Revenue & Tax Analytics</h3>
+                <p className={`text-sm font-medium ${theme === 'light' ? 'text-[#475569]' : 'text-slate-400'}`}>Monthly overview of your GST liabilities and credits</p>
+              </div>
+              <div className="flex items-center gap-2 p-1 rounded-full border" style={{ backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(255,255,255,0.03)', borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(255,255,255,0.05)' }}>
+                {['3M', '6M', '1Y'].map(period => (
+                  <button key={period} className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${period === '6M' ? (theme === 'light' ? 'bg-white text-[#2563eb] shadow-[0_2px_8px_rgba(0,0,0,0.08)]' : 'bg-[#00b4f5]/20 text-[#00b4f5]') : (theme === 'light' ? 'text-[#64748b] hover:text-[#0f172a]' : 'text-slate-400 hover:text-white')}`}>
+                    {period}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="flex items-center gap-2 p-1 rounded-full border" style={{ backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(255,255,255,0.03)', borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(255,255,255,0.05)' }}>
-              {['3M', '6M', '1Y'].map(period => (
-                <button key={period} className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${period === '6M' ? (theme === 'light' ? 'bg-white text-[#2563eb] shadow-[0_2px_8px_rgba(0,0,0,0.08)]' : 'bg-[#00b4f5]/20 text-[#00b4f5]') : (theme === 'light' ? 'text-[#64748b] hover:text-[#0f172a]' : 'text-slate-400 hover:text-white')}`}>
-                  {period}
+            {chartData.length > 0 ? (
+              <div className="h-[280px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4} />
+                        <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
+                      </linearGradient>
+                      <linearGradient id="netGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#22c55e" stopOpacity={0.4} />
+                        <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke={theme === 'light' ? '#e2e8f0' : '#1e293b'} vertical={false} />
+                    <XAxis 
+                      dataKey="name" 
+                      stroke={theme === 'light' ? '#94a3b8' : '#475569'} 
+                      tick={{ fill: theme === 'light' ? '#64748b' : '#64748b', fontSize: 10 }} 
+                      axisLine={false} 
+                      tickLine={false} 
+                    />
+                    <YAxis 
+                      stroke={theme === 'light' ? '#94a3b8' : '#475569'} 
+                      tick={{ fill: theme === 'light' ? '#64748b' : '#64748b', fontSize: 10 }} 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} 
+                    />
+                    <Tooltip content={<CustomTooltip theme={theme} />} />
+                    <Area type="monotone" dataKey="Sales Tax" stroke="#0ea5e9" fill="url(#salesGrad)" strokeWidth={3} animationDuration={1500} />
+                    <Area type="monotone" dataKey="Net Payable" stroke="#22c55e" fill="url(#netGrad)" strokeWidth={3} animationDuration={1500} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-48 sm:h-56 text-slate-500 text-sm italic">
+                Insufficient data for analytics trend.
+              </div>
+            )}
+          </motion.div>
+
+          {/* Recent Invoices */}
+          <motion.div 
+            variants={itemVariants} 
+            className="rounded-[24px] overflow-hidden transition-all duration-300 border"
+            style={{ 
+              backgroundColor: theme === 'light' ? '#ffffff' : '#0d1424',
+              borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(0,180,245,0.15)',
+              boxShadow: theme === 'light' ? '0 2px 16px rgba(0,0,0,0.06)' : 'none'
+            }}
+          >
+            <div className="flex items-center justify-between px-6 sm:px-8 py-6 border-b" style={{ borderColor: theme === 'light' ? '#f1f5f9' : 'rgba(255,255,255,0.05)' }}>
+              <h3 className={`text-lg font-black tracking-tight ${theme === 'light' ? 'text-[#0f172a]' : 'text-white'}`}>Recently Processed</h3>
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={handleExport}
+                  className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-500 transition-colors flex items-center gap-1.5"
+                >
+                  <Download size={12} /> Export All
                 </button>
+                <Link to="/invoices" className="text-[10px] font-black uppercase tracking-widest text-primary-400 hover:text-primary-300">
+                  View Repository
+                </Link>
+              </div>
+            </div>
+            <div className={clsx(
+              "divide-y max-h-[440px] overflow-y-auto custom-scrollbar",
+              theme === 'light' ? "divide-[#f1f5f9]" : "divide-slate-800/20"
+            )}>
+              {recentInvoices.length === 0 ? (
+                <div className="px-5 py-16 text-center text-slate-500 italic flex flex-col items-center gap-4">
+                  <div className={clsx(
+                    "w-14 h-14 rounded-2xl border flex items-center justify-center",
+                    theme === 'light' ? "bg-slate-50 border-[#e2e8f0]" : "bg-white/[0.02] border border-white/5"
+                  )}>
+                    <FileText size={24} className={theme === 'light' ? "text-slate-300" : "text-slate-700"} />
+                  </div>
+                  <div>
+                    <p className={clsx("text-sm font-bold mb-1", theme === 'light' ? "text-slate-400" : "text-slate-400")}>No recent activity</p>
+                    <Link to="/upload" className="text-primary-400 text-xs font-bold hover:text-primary-300">Upload your first invoice →</Link>
+                  </div>
+                </div>
+              ) : recentInvoices.map(inv => (
+                <Link key={inv.id} to={`/invoices/${inv.id}`} className={clsx(
+                  "flex items-center gap-4 px-6 py-4 transition-all duration-200 group border-l-2 border-l-transparent",
+                  theme === 'light' ? "hover:bg-blue-50/50 hover:border-l-blue-500" : "hover:bg-primary-500/[0.03] hover:border-l-primary-500/50"
+                )}>
+                  <div className={clsx(
+                    "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border transition-all",
+                    theme === 'light' 
+                      ? "bg-blue-50 border-blue-100 group-hover:border-blue-300" 
+                      : "bg-primary-950/40 border-primary-500/10 group-hover:border-primary-500/30"
+                  )}>
+                    <FileText size={18} className={theme === 'light' ? "text-blue-600" : "text-primary-400"} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={clsx(
+                      "text-sm font-bold truncate mb-0.5 transition-colors",
+                      theme === 'light' ? 'text-[#0f172a] group-hover:text-[#2563eb]' : 'text-slate-100 group-hover:text-primary-400'
+                    )}>
+                      {inv.supplier_name || inv.original_filename}
+                    </p>
+                    <div className={`flex items-center gap-2 text-[10px] font-medium ${theme === 'light' ? 'text-[#64748b]' : 'text-slate-500'}`}>
+                       <span>{formatDate(inv.created_at)}</span>
+                       <span className={theme === 'light' ? 'text-[#cbd5e1]' : 'text-slate-800'}>•</span>
+                       <span className="truncate">#{inv.invoice_number || 'N/A'}</span>
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className={`text-sm font-black mb-1.5 ${theme === 'light' ? 'text-[#0f172a]' : 'text-white'}`}>{formatCurrency(inv.total_amount)}</p>
+                    <div className="scale-90 origin-right">
+                      <StatusBadge status={inv.status} />
+                    </div>
+                  </div>
+                </Link>
               ))}
             </div>
-          </div>
-          {chartData.length > 0 ? (
-            <div className="h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="netGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#22c55e" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke={theme === 'light' ? '#e2e8f0' : '#1e293b'} vertical={false} />
-                  <XAxis 
-                    dataKey="name" 
-                    stroke={theme === 'light' ? '#94a3b8' : '#475569'} 
-                    tick={{ fill: theme === 'light' ? '#64748b' : '#64748b', fontSize: 10 }} 
-                    axisLine={false} 
-                    tickLine={false} 
-                  />
-                  <YAxis 
-                    stroke={theme === 'light' ? '#94a3b8' : '#475569'} 
-                    tick={{ fill: theme === 'light' ? '#64748b' : '#64748b', fontSize: 10 }} 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} 
-                  />
-                  <Tooltip content={<CustomTooltip theme={theme} />} />
-                  <Area type="monotone" dataKey="Sales Tax" stroke="#0ea5e9" fill="url(#salesGrad)" strokeWidth={3} animationDuration={1500} />
-                  <Area type="monotone" dataKey="Net Payable" stroke="#22c55e" fill="url(#netGrad)" strokeWidth={3} animationDuration={1500} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-48 sm:h-56 text-slate-500 text-sm italic">
-              Insufficient data for analytics trend.
-            </div>
-          )}
-        </motion.div>
+          </motion.div>
+        </div>
 
-        {/* Info Column */}
+        {/* Right Secondary Column: Status & Quick Utils */}
         <div className="lg:col-span-4 space-y-6">
-          {/* Invoice Status Breakdown */}
+          {/* Compliance Status */}
           <motion.div 
             variants={itemVariants} 
             className="p-6 sm:p-8 rounded-[24px] transition-all duration-300 border"
@@ -314,7 +397,7 @@ export default function DashboardPage() {
             </div>
           </motion.div>
 
-          {/* New Quick Stats Card */}
+          {/* New Quick Stats Card (Reminders) */}
           <motion.div 
             variants={itemVariants} 
             className={clsx(
@@ -347,119 +430,39 @@ export default function DashboardPage() {
                 </div>
              </div>
           </motion.div>
-        </div>
-      </div>
 
-      {/* Recent Invoices & Quick Actions Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Recent Invoices */}
-        <motion.div 
-          variants={itemVariants} 
-          className="rounded-[24px] overflow-hidden lg:col-span-8 transition-all duration-300 border"
-          style={{ 
-            backgroundColor: theme === 'light' ? '#ffffff' : '#0d1424',
-            borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(0,180,245,0.15)',
-            boxShadow: theme === 'light' ? '0 2px 16px rgba(0,0,0,0.06)' : 'none'
-          }}
-        >
-          <div className="flex items-center justify-between px-6 sm:px-8 py-6 border-b" style={{ borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(255,255,255,0.05)' }}>
-            <h3 className={`text-lg font-black tracking-tight ${theme === 'light' ? 'text-[#0f172a]' : 'text-white'}`}>Recently Processed</h3>
-            <div className="flex items-center gap-4">
-              <button 
-                onClick={handleExport}
-                className="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-colors flex items-center gap-1.5"
-              >
-                <Download size={12} /> Export All
-              </button>
-              <Link to="/invoices" className="text-[9px] font-black uppercase tracking-widest text-primary-400 hover:text-primary-300">
-                View Repository
-              </Link>
-            </div>
-          </div>
-          <div className={clsx(
-            "divide-y max-h-[400px] overflow-y-auto custom-scrollbar",
-            theme === 'light' ? "divide-[#f1f5f9]" : "divide-slate-800/20"
-          )}>
-            {recentInvoices.length === 0 ? (
-              <div className="px-5 py-16 text-center text-slate-500 italic flex flex-col items-center gap-4">
-                <div className={clsx(
-                  "w-14 h-14 rounded-2xl border flex items-center justify-center",
-                  theme === 'light' ? "bg-slate-50 border-[#e2e8f0]" : "bg-white/[0.02] border border-white/5"
-                )}>
-                  <FileText size={24} className={theme === 'light' ? "text-slate-300" : "text-slate-700"} />
-                </div>
-                <div>
-                  <p className={clsx("text-sm font-bold mb-1", theme === 'light' ? "text-slate-400" : "text-slate-400")}>No recent activity</p>
-                  <Link to="/upload" className="text-primary-400 text-xs font-bold hover:text-primary-300">Upload your first invoice →</Link>
-                </div>
-              </div>
-            ) : recentInvoices.map(inv => (
-              <Link key={inv.id} to={`/invoices/${inv.id}`} className={clsx(
-                "flex items-center gap-4 px-6 py-4 transition-all duration-200 group border-l-2 border-l-transparent",
-                theme === 'light' ? "hover:bg-blue-50/50 hover:border-l-blue-500" : "hover:bg-primary-500/[0.03] hover:border-l-primary-500/50"
-              )}>
-                <div className={clsx(
-                  "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border transition-all",
-                  theme === 'light' 
-                    ? "bg-blue-50 border-blue-100 group-hover:border-blue-300" 
-                    : "bg-primary-950/40 border-primary-500/10 group-hover:border-primary-500/30"
-                )}>
-                  <FileText size={18} className={theme === 'light' ? "text-blue-600" : "text-primary-400"} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className={clsx(
-                    "text-sm font-bold truncate mb-0.5 transition-colors",
-                    theme === 'light' ? 'text-[#0f172a] group-hover:text-[#2563eb]' : 'text-slate-100 group-hover:text-primary-400'
-                  )}>
-                    {inv.supplier_name || inv.original_filename}
-                  </p>
-                  <div className={`flex items-center gap-2 text-[10px] font-medium ${theme === 'light' ? 'text-[#64748b]' : 'text-slate-500'}`}>
-                     <span>{formatDate(inv.created_at)}</span>
-                     <span className={theme === 'light' ? 'text-[#cbd5e1]' : 'text-slate-800'}>•</span>
-                     <span className="truncate">#{inv.invoice_number || 'N/A'}</span>
+          {/* Quick actions stack */}
+          <div className="grid grid-cols-1 gap-4">
+            {[
+              { to: '/upload', icon: Upload, label: 'Upload Invoice', desc: 'Scan PDFs for extraction', iconColor: '#3b82f6' },
+              { to: '/reports', icon: TrendingUp, label: 'Annual Analytics', desc: 'Yearly GST performance', iconColor: '#22c55e' },
+              { to: '/forecast', icon: TrendingUp, label: 'Tax Projection', desc: 'Predict future liabilities', iconColor: '#8b5cf6' },
+            ].map(({ to, icon: Icon, label, desc, iconColor }) => (
+              <motion.div variants={itemVariants} key={to}>
+                <Link 
+                  to={to} 
+                  className="p-6 rounded-[24px] flex items-center gap-4 hover:translate-x-1.5 group transition-all duration-300 border"
+                  style={{
+                    backgroundColor: theme === 'light' ? '#ffffff' : '#0d1424',
+                    borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(0,180,245,0.15)',
+                    boxShadow: theme === 'light' ? '0 2px 16px rgba(0,0,0,0.06)' : 'none'
+                  }}
+                >
+                  <div 
+                    className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border ${theme === 'light' ? 'border-transparent bg-slate-50' : 'border-white/5 bg-white/[0.02]'} group-hover:scale-110 transition-transform duration-300`}
+                  >
+                    <Icon size={22} color={theme === 'light' ? iconColor : '#00b4f5'} className="group-hover:rotate-12 transition-transform duration-300" />
                   </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <p className={`text-sm font-black mb-1.5 ${theme === 'light' ? 'text-[#0f172a]' : 'text-white'}`}>{formatCurrency(inv.total_amount)}</p>
-                  <div className="scale-90 origin-right">
-                    <StatusBadge status={inv.status} />
+                  <div className="flex-1 min-w-0">
+                    <span className={`block text-xs font-black uppercase tracking-widest mb-1 ${theme === 'light' ? 'text-[#0f172a]' : 'text-slate-100'}`}>{label}</span>
+                    <span className={`block text-[11px] font-medium truncate ${theme === 'light' ? 'text-[#64748b]' : 'text-slate-500'}`}>{desc}</span>
                   </div>
-                </div>
-              </Link>
+                  <ArrowRight size={16} className={`transition-all shrink-0 ${theme === 'light' ? 'text-[#94a3b8] group-hover:text-[#2563eb] group-hover:translate-x-1' : 'text-slate-700 group-hover:text-white group-hover:translate-x-1'}`} />
+                </Link>
+              </motion.div>
             ))}
           </div>
-        </motion.div>
-
-        {/* Quick actions */}
-        <motion.div variants={itemVariants} className="lg:col-span-4 grid grid-cols-1 gap-4">
-          {[
-            { to: '/upload', icon: Upload, label: 'Upload Invoice', desc: 'Scan PDFs for extraction', border: 'border-[#3b82f6]', bg: 'bg-[rgba(37,99,235,0.1)]', iconColor: '#3b82f6' },
-            { to: '/reports', icon: TrendingUp, label: 'Annual Analytics', desc: 'Yearly GST performance', border: 'border-[#22c55e]', bg: 'bg-[rgba(34,197,94,0.1)]', iconColor: '#22c55e' },
-            { to: '/forecast', icon: TrendingUp, label: 'Tax Projection', desc: 'Predict future liabilities', border: 'border-[#8b5cf6]', bg: 'bg-[rgba(139,92,246,0.1)]', iconColor: '#8b5cf6' },
-          ].map(({ to, icon: Icon, label, desc, border, bg, iconColor }) => (
-            <Link 
-              key={to} 
-              to={to} 
-              className="p-6 rounded-[24px] flex items-center gap-4 hover:translate-x-1.5 group transition-all duration-300 border"
-              style={{
-                backgroundColor: theme === 'light' ? '#ffffff' : '#0d1424',
-                borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(0,180,245,0.15)',
-                boxShadow: theme === 'light' ? '0 2px 16px rgba(0,0,0,0.06)' : 'none'
-              }}
-            >
-              <div 
-                className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border ${theme === 'light' ? 'border-transparent bg-slate-50' : 'border-white/5 bg-white/[0.02]'} group-hover:scale-110 transition-transform duration-300`}
-              >
-                <Icon size={22} color={theme === 'light' ? iconColor : '#00b4f5'} className="group-hover:rotate-12 transition-transform duration-300" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className={`block text-xs font-black uppercase tracking-widest mb-1 ${theme === 'light' ? 'text-[#0f172a]' : 'text-slate-100'}`}>{label}</span>
-                <span className={`block text-[11px] font-medium truncate ${theme === 'light' ? 'text-[#64748b]' : 'text-slate-500'}`}>{desc}</span>
-              </div>
-              <ArrowRight size={16} className={`transition-all shrink-0 ${theme === 'light' ? 'text-[#94a3b8] group-hover:text-[#2563eb] group-hover:translate-x-1' : 'text-slate-700 group-hover:text-white group-hover:translate-x-1'}`} />
-            </Link>
-          ))}
-        </motion.div>
+        </div>
       </div>
     </motion.div>
   )

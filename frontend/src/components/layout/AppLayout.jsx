@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useTheme } from '../../context/ThemeContext'
 import Sidebar from './Sidebar'
 import TopNav from './TopNav'
+import ChatAssistant from '../ui/ChatAssistant'
 
 export default function AppLayout() {
   const location = useLocation()
@@ -40,6 +41,8 @@ export default function AppLayout() {
             </AnimatePresence>
           </div>
         </main>
+        
+        <ChatAssistant />
       </div>
     </div>
   )
