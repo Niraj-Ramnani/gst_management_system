@@ -7,11 +7,13 @@ import { TableSkeleton } from '../components/ui/Skeleton'
 import EmptyState from '../components/ui/EmptyState'
 import { formatCurrency, formatDate } from '../utils/formatters'
 import clsx from 'clsx'
+import { useTheme } from '../context/ThemeContext'
 
 const STATUSES = ['', 'uploaded', 'parsed', 'verified', 'included_in_return']
 const TYPES = ['', 'purchase', 'sale']
 
 export default function InvoicesPage() {
+  const { theme } = useTheme()
   const navigate = useNavigate()
   const [invoices, setInvoices] = useState([])
   const [loading, setLoading] = useState(true)
